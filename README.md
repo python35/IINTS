@@ -12,15 +12,13 @@ Built with **MicroPython** on a **Raspberry Pi Pico**, it controls insulin deliv
 ---
 
 ## 🌜 Project History  
-IINTS was created in **2024** as a response to the high cost of commercial insulin pumps. The goal was to build a **low-cost, open-source alternative** using **readily available components** like the Raspberry Pi Pico.  
+IINTS was created in 2024 as a personal project to learn more about insulin pumps and their mechanics. As someone with 13 years of experience living with diabetes, I was curious about how these devices work and wanted to build one myself. While not intended as a commercial alternative, I am sharing this project as an open-source learning experience for anyone interested in electronics, programming, and medical technology.
 
-The project started as a **simple stepper motor controller** for a syringe pump. Over time, it evolved into a **fully programmable insulin delivery system** with an OLED display, buttons, and safety features.  
-
-🚀 **Milestones:**  
-📌 **June 2024** – First working prototype using Raspberry Pi Pico  
-📌 **July 2024** – Implemented stepper motor control for precise insulin delivery  
-📌 **August 2024** – Added OLED display and user interface  
-📌 **September 2024** – Released as an open-source project under **MIT License**  
+## 🚀 Milestones:
+📌 May 2024 – First working prototype using Raspberry Pi Pico
+📌 July 2024 – Added OLED display and user interface
+📌 December 2024 – Introduced microstepping for improved precision
+📌 April 2025 – Showcasing at Coolest Projects Belgium
 
 ---
 
@@ -39,11 +37,9 @@ The project started as a **simple stepper motor controller** for a syringe pump.
 <table align="center">
   <tr>
     <td align="center"><img src="assets/depomp.jpg" width="300"></td>
-    <td align="center"><img src="assets/prototype2.jpg" width="300"></td>
   </tr>
   <tr>
-    <td align="center">Prototype v1</td>
-    <td align="center">OLED Display UI</td>
+    <td align="center">Prototype final version</td>
   </tr>
 </table>
 
