@@ -1,9 +1,31 @@
-## 🩸 IINTS – Open-Source Insulin Pump for Raspberry Pi Pico  
+Hier is een verbeterde versie van je **README.md** met:  
+✅ Een **logo**  
+✅ **Foto's** van het project  
+✅ **Geschiedenis van het project**  
 
-**IINTS** (Insuline is not the solution) is an **open-source insulin pump project** designed for affordability and accessibility.  
+---
+
+# 🩸 IINTS – Open-Source Insulin Pump for Raspberry Pi Pico  
+
+<img src="assets/IINTS logo.png" width="200">  
+
+**IINTS** (Intelligent Insulin Therapy System) is an **open-source insulin pump project** designed for affordability and accessibility.  
 Built with **MicroPython** on a **Raspberry Pi Pico**, it controls insulin delivery using stepper motors and a user-friendly interface.  
 
 🔹 **Customizable** | 🔹 **Affordable** | 🔹 **Open-Source** | 🔹 **Made for Everyone**  
+
+---
+
+## 📜 Project History  
+IINTS was created in **2024** as a response to the high cost of commercial insulin pumps. The goal was to build a **low-cost, open-source alternative** using **readily available components** like the Raspberry Pi Pico.  
+
+The project started as a **simple stepper motor controller** for a syringe pump. Over time, it evolved into a **fully programmable insulin delivery system** with an OLED display, buttons, and safety features.  
+
+🚀 **Milestones:**  
+📌 **June 2024** – First working prototype using Raspberry Pi Pico  
+📌 **July 2024** – Implemented stepper motor control for precise insulin delivery  
+📌 **August 2024** – Added OLED display and user interface  
+📌 **September 2024** – Released as an open-source project under **MIT License**  
 
 ---
 
@@ -16,9 +38,22 @@ Built with **MicroPython** on a **Raspberry Pi Pico**, it controls insulin deliv
 
 ---
 
-## 🛠️ Hardware Requirements  
-You’ll need the following components:  
+## 🖼️ Project Images  
 
+<table>
+  <tr>
+    <td><img src="assets/prototype1.jpg" width="300"></td>
+    <td><img src="assets/prototype2.jpg" width="300"></td>
+  </tr>
+  <tr>
+    <td align="center">Prototype v1</td>
+    <td align="center">OLED Display UI</td>
+  </tr>
+</table>
+
+---
+
+## 🛠️ Hardware Requirements  
 ### 🎛️ Core Hardware  
 - **Raspberry Pi Pico (RP2040)**
 - **OLED/TFT Display** (for UI)
@@ -105,3 +140,6 @@ Want to improve the project? Fork the repository and submit a **Pull Request**.
 It is **not an FDA-approved medical device**. Always consult a medical professional before using insulin pumps.  
 
 ---
+
+### 📥 Download & Start Building!  
+⬇️ **[Clone the repository](https://github.com/python35/IINTS.git) and start experimenting!**  
