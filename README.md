@@ -1,7 +1,7 @@
 # 🩸 IINTS – Open-Source Insulin Pump for Raspberry Pi Pico  
 
 <div align="center">
-  <img src="assets/IINTS-logo.png" width="300">
+  <img src="assets/IINTS logo.png" width="300">
 </div>  
 
 **IINTS** (Insuline Is Not The Solution) is an **open-source insulin pump project** designed for affordability and accessibility.  
@@ -67,7 +67,7 @@ The project started as a **simple stepper motor controller** for a syringe pump.
 
 All necessary 3D printable parts can be found in the `/stl` folder.  
 
-👅 **Download STL Files**: [STL Folder](https://github.com/YOUR_USERNAME/IINTS/tree/main/stl)  
+👅 **Download STL Files**: [STL Folder](https://github.com/python35/IINTS/tree/main/stl)  
 
 ### 🛠️ Recommended Print Settings  
 - **Material:** PLA or PETG  
@@ -82,7 +82,7 @@ All necessary 3D printable parts can be found in the `/stl` folder.
 
 Check out the 3D printing timelapse of the IINTS components:
 
-[![Watch the video](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://youtu.be/YOUR_VIDEO_ID)  
+<img src="assets/filmpje1.mp4" width="300">  
 
 ---
 
