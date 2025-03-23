@@ -23,6 +23,7 @@ IINTS was created in **2024** as a personal project to learn more about insulin 
 📌 **April 2025** – Showcasing at **Coolest Projects Belgium**  
 
 💡 **Special Thanks**  
+
 A huge thank you to the **coaches of CoderDojo Genk and Hasselt** for their incredible guidance and support throughout this project. Their mentorship has been invaluable in helping me bring this idea to life! 🙌  
 ---
 
