@@ -1,61 +1,107 @@
-# IINTS - Open-Source Insulin Pump Project
+## 🩸 IINTS – Open-Source Insulin Pump for Raspberry Pi Pico  
 
-## 🚀 About IINTS
-**IINTS** (*Intelligent Insulin Therapy System*) is an **open-source insulin pump project** designed to provide an **affordable, customizable, and accessible** solution for insulin delivery. Built using **MicroPython in Thonny**, it allows users to control insulin dosage through a **stepper motor-driven infusion system** with a **TFT display** and **button-based interface**.
+**IINTS** (Insuline is not the solution) is an **open-source insulin pump project** designed for affordability and accessibility.  
+Built with **MicroPython** on a **Raspberry Pi Pico**, it controls insulin delivery using stepper motors and a user-friendly interface.  
 
-This project is aimed at **DIY medical technology enthusiasts**, researchers, and anyone interested in developing open-source medical devices.
-
-## 🛠 Features
-- **Stepper motor-controlled insulin delivery** for precision dosing
-- **TFT screen display** for user interaction
-- **Button-based interface** to adjust insulin dosage
-- **Customizable settings** to fit individual insulin therapy needs
-- **Built with MicroPython** on a microcontroller for efficiency and flexibility
-- **Open-source and community-driven** for continuous improvement
-
-## 📖 How It Works
-1. **Input daily insulin dosage** using the button controls.
-2. **Enter carbohydrate intake** to calculate the required insulin units.
-3. **Stepper motor dispenses insulin** based on the calculated dosage.
-4. **Optional manual override** for reversing or adjusting dosage.
-5. **User interface updates in real time** on the TFT display.
-
-## 🏗️ Getting Started
-### **Hardware Requirements**
-- Raspberry Pi Pico (or similar MicroPython-compatible board)
-- Stepper motor + motor driver (e.g., ULN2003)
-- TFT display (ST7789 or equivalent)
-- Buttons for user input
-- Insulin reservoir & delivery system
-- Power supply (USB or battery-powered)
-
-### **Software Requirements**
-- [Thonny IDE](https://thonny.org/) (Recommended for MicroPython development)
-- MicroPython firmware installed on the board
-
-### **Installation Steps**
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/python35/IINTS.git
-   ```
-2. Open the project in **Thonny**.
-3. Flash the MicroPython firmware onto your microcontroller.
-4. Upload the Python scripts to the board.
-5. Connect the hardware components as per the wiring diagram.
-6. Run the main script and start using IINTS!
-
-## 📜 License
-This project is licensed under the **MIT License**, which means:
-✅ You can use, modify, and distribute it freely.
-✅ It comes with no warranty—use at your own risk.
-✅ Contributions are welcome to improve and expand the project!
-
-## 🤝 Contributing
-We encourage contributions! Whether it's bug fixes, feature improvements, or documentation updates, feel free to **open a pull request** or **create an issue**.
-
-## 📢 Disclaimer
-**⚠️ This project is experimental and NOT intended for medical use without proper testing and validation. Always consult a medical professional before using DIY medical devices.**
+🔹 **Customizable** | 🔹 **Affordable** | 🔹 **Open-Source** | 🔹 **Made for Everyone**  
 
 ---
-**Join the Open-Source Medical Revolution! 💙**
 
+## 📌 Features  
+✅ **Stepper Motor Control** – Accurate insulin delivery using stepper motors  
+✅ **User-Friendly Interface** – Buttons & Display for easy control  
+✅ **Safety Mechanisms** – Basic fail-safes for reliable operation  
+✅ **Customizable** – Modify dosage & settings as needed  
+✅ **Open-Source** – Licensed under **MIT**, free for personal & medical research use  
+
+---
+
+## 🛠️ Hardware Requirements  
+You’ll need the following components:  
+
+### 🎛️ Core Hardware  
+- **Raspberry Pi Pico (RP2040)**
+- **OLED/TFT Display** (for UI)
+- **Stepper Motor + Driver** (e.g., A4988, ULN2003)
+- **Push Buttons** (for user input)
+- **Battery / Power Supply**  
+
+### 💉 Insulin Pump Mechanism  
+- **Syringe Pump Setup** (or peristaltic pump)
+- **3D Printed Mounts** (optional, for secure placement)  
+
+---
+
+## 🚀 Installation Guide  
+
+### 1️⃣ Install **MicroPython**  
+Ensure you're using the correct **MicroPython version**:  
+🔹 **MicroPython v1.23.0 (2024-06-02) for Raspberry Pi Pico**  
+
+📥 **Download Here:** [https://micropython.org/download/RPI_PICO](https://micropython.org/download/RPI_PICO)  
+
+#### Check Your MicroPython Version:  
+Connect to your Raspberry Pi Pico and run:  
+```python
+import os
+os.uname()
+```
+
+---
+
+### 2️⃣ Install **Thonny IDE**  
+Thonny is recommended for coding and uploading MicroPython scripts.  
+
+📥 Download: [https://thonny.org](https://thonny.org)  
+
+Steps:  
+1. Open Thonny  
+2. Select **Raspberry Pi Pico** as the interpreter  
+3. Install **MicroPython firmware** if not already installed  
+
+---
+
+### 3️⃣ Clone This Repository  
+Run this command to download the project:  
+```sh
+git clone https://github.com/python35/IINTS.git
+```
+Or manually **Download ZIP** from GitHub.  
+
+---
+
+### 4️⃣ Upload to Raspberry Pi Pico  
+1. Connect **Raspberry Pi Pico** via USB  
+2. Open **Thonny**  
+3. Copy `main.py` and other files to the Pico  
+4. Click **Run**  
+
+---
+
+## ⚙️ Configuration  
+Edit **config.py** to set parameters:  
+```python
+INSULIN_RATE = 1.0  # Units per second
+STEP_MOTOR_SPEED = 200  # Steps per second
+DISPLAY_BRIGHTNESS = 0.8  # 80% brightness
+```
+Adjust based on your needs.  
+
+---
+
+## 📜 License  
+This project is **MIT Licensed**, meaning you can freely use, modify, and distribute it.  
+However, **this is NOT a certified medical device** – use it responsibly.  
+
+---
+
+## 🤝 Contributing  
+Want to improve the project? Fork the repository and submit a **Pull Request**.  
+
+---
+
+## 📢 Disclaimer  
+🚨 **Warning:** This project is for **educational and research purposes only**.  
+It is **not an FDA-approved medical device**. Always consult a medical professional before using insulin pumps.  
+
+---
