@@ -1,17 +1,17 @@
 # 🩸 IINTS – Open-Source Insulin Pump for Raspberry Pi Pico  
 
 <div align="center">
-  <img src="assets/IINTS logo.png" width="300">
+  <img src="assets/IINTS-logo.png" width="300">
 </div>  
 
-**IINTS** (Intelligent Insulin Therapy System) is an **open-source insulin pump project** designed for affordability and accessibility.  
+**IINTS** (Insuline Is Not The Solution) is an **open-source insulin pump project** designed for affordability and accessibility.  
 Built with **MicroPython** on a **Raspberry Pi Pico**, it controls insulin delivery using stepper motors and a user-friendly interface.  
 
 🔹 **Customizable** | 🔹 **Affordable** | 🔹 **Open-Source** | 🔹 **Made for Everyone**  
 
 ---
 
-## 📜 Project History  
+## 🌜 Project History  
 IINTS was created in **2024** as a response to the high cost of commercial insulin pumps. The goal was to build a **low-cost, open-source alternative** using **readily available components** like the Raspberry Pi Pico.  
 
 The project started as a **simple stepper motor controller** for a syringe pump. Over time, it evolved into a **fully programmable insulin delivery system** with an OLED display, buttons, and safety features.  
@@ -29,16 +29,17 @@ The project started as a **simple stepper motor controller** for a syringe pump.
 ✅ **User-Friendly Interface** – Buttons & Display for easy control  
 ✅ **Safety Mechanisms** – Basic fail-safes for reliable operation  
 ✅ **Customizable** – Modify dosage & settings as needed  
+✅ **3D Printable** – Open-source STL files for hardware  
 ✅ **Open-Source** – Licensed under **MIT**, free for personal & medical research use  
 
 ---
 
 ## 🖼️ Project Images  
 
-<table>
+<table align="center">
   <tr>
-    <td><img src="assets/prototype1.jpg" width="300"></td>
-    <td><img src="assets/prototype2.jpg" width="300"></td>
+    <td align="center"><img src="assets/depomp.jpg" width="300"></td>
+    <td align="center"><img src="assets/prototype2.jpg" width="300"></td>
   </tr>
   <tr>
     <td align="center">Prototype v1</td>
@@ -49,7 +50,7 @@ The project started as a **simple stepper motor controller** for a syringe pump.
 ---
 
 ## 🛠️ Hardware Requirements  
-### 🎛️ Core Hardware  
+### 🎧 Core Hardware  
 - **Raspberry Pi Pico (RP2040)**
 - **OLED/TFT Display** (for UI)
 - **Stepper Motor + Driver** (e.g., A4988, ULN2003)
@@ -58,7 +59,30 @@ The project started as a **simple stepper motor controller** for a syringe pump.
 
 ### 💉 Insulin Pump Mechanism  
 - **Syringe Pump Setup** (or peristaltic pump)
-- **3D Printed Mounts** (optional, for secure placement)  
+- **3D Printed Mounts** (STL files included!)  
+
+---
+
+## 🤝 3D Printing Files  
+
+All necessary 3D printable parts can be found in the `/stl` folder.  
+
+👅 **Download STL Files**: [STL Folder](https://github.com/YOUR_USERNAME/IINTS/tree/main/stl)  
+
+### 🛠️ Recommended Print Settings  
+- **Material:** PLA or PETG  
+- **Layer height:** 0.2mm  
+- **Infill:** 20%  
+- **Supports:** Not required  
+- **Bed adhesion:** Brim or skirt  
+
+---
+
+## 🎥 3D Printing Timelapse  
+
+Check out the 3D printing timelapse of the IINTS components:
+
+[![Watch the video](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://youtu.be/YOUR_VIDEO_ID)  
 
 ---
 
@@ -68,7 +92,7 @@ The project started as a **simple stepper motor controller** for a syringe pump.
 Ensure you're using the correct **MicroPython version**:  
 🔹 **MicroPython v1.23.0 (2024-06-02) for Raspberry Pi Pico**  
 
-📥 **Download Here:** [https://micropython.org/download/RPI_PICO](https://micropython.org/download/RPI_PICO)  
+👅 **Download Here:** [https://micropython.org/download/RPI_PICO](https://micropython.org/download/RPI_PICO)  
 
 #### Check Your MicroPython Version:  
 Connect to your Raspberry Pi Pico and run:  
@@ -82,7 +106,7 @@ os.uname()
 ### 2️⃣ Install **Thonny IDE**  
 Thonny is recommended for coding and uploading MicroPython scripts.  
 
-📥 Download: [https://thonny.org](https://thonny.org)  
+👅 Download: [https://thonny.org](https://thonny.org)  
 
 Steps:  
 1. Open Thonny  
@@ -94,7 +118,7 @@ Steps:
 ### 3️⃣ Clone This Repository  
 Run this command to download the project:  
 ```sh
-git clone https://github.com/python35/IINTS.git
+git clone https://github.com/YOUR_USERNAME/IINTS.git
 ```
 Or manually **Download ZIP** from GitHub.  
 
@@ -119,7 +143,7 @@ Adjust based on your needs.
 
 ---
 
-## 📜 License  
+## 📚 License  
 This project is **MIT Licensed**, meaning you can freely use, modify, and distribute it.  
 However, **this is NOT a certified medical device** – use it responsibly.  
 
@@ -136,5 +160,6 @@ It is **not an FDA-approved medical device**. Always consult a medical professio
 
 ---
 
-### 📥 Download & Start Building!  
-⬇️ **[Clone the repository](https://github.com/python35/IINTS.git) and start experimenting!**  
+### 👅 Download & Start Building!  
+🔽 **[Clone the repository](https://github.com/YOUR_USERNAME/IINTS.git) and start experimenting!**
+
