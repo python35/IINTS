@@ -1,7 +1,7 @@
 # 🩸 IINTS – Open-Source Insulin Pump for Raspberry Pi Pico  
 
 <div align="center">
-  <img src="assets/IINTS_banner.png" width="100%">
+  <img src="assets/IINTS_banner.png" width="100%" height="70%">
 </div>
 
 **IINTS** (Insuline Is Not The Solution) is an **open-source insulin pump project** designed for affordability and accessibility.  
