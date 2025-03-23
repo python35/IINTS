@@ -12,14 +12,18 @@ Built with **MicroPython** on a **Raspberry Pi Pico**, it controls insulin deliv
 ---
 
 ## 🌜 Project History  
-IINTS was created in 2024 as a personal project to learn more about insulin pumps and their mechanics. As someone with 13 years of experience living with diabetes, I was curious about how these devices work and wanted to build one myself. While not intended as a commercial alternative, I am sharing this project as an open-source learning experience for anyone interested in electronics, programming, and medical technology.
+IINTS was created in **2024** as a personal project to learn more about insulin pumps and their mechanics. As someone with 13 years of experience living with diabetes, I was curious about how these devices work and wanted to build one myself. While not intended as a commercial alternative, I am sharing this project as an open-source learning experience for anyone interested in electronics, programming, and medical technology.
 
-## 🚀 Milestones:
-📌 May 2024 – First working prototype using Raspberry Pi Pico
-📌 July 2024 – Added OLED display and user interface
-📌 December 2024 – Introduced microstepping for improved precision
-📌 April 2025 – Showcasing at Coolest Projects Belgium
+--- 
 
+🚀 **Milestones:**  
+📌 **May 2024** – First working prototype using Raspberry Pi Pico  
+📌 **July 2024** – Added OLED display and user interface  
+📌 **December 2024** – Introduced microstepping for improved precision  
+📌 **April 2025** – Showcasing at **Coolest Projects Belgium**  
+
+💡 **Special Thanks**  
+A huge thank you to the **coaches of CoderDojo Genk and Hasselt** for their incredible guidance and support throughout this project. Their mentorship has been invaluable in helping me bring this idea to life! 🙌  
 ---
 
 ## 📌 Features  
@@ -114,7 +118,7 @@ Steps:
 ### 3️⃣ Clone This Repository  
 Run this command to download the project:  
 ```sh
-git clone https://github.com/YOUR_USERNAME/IINTS.git
+git clone https://github.com/python35/IINTS.git
 ```
 Or manually **Download ZIP** from GitHub.  
 
