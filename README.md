@@ -7,7 +7,9 @@ Hier is een verbeterde versie van je **README.md** met:
 
 # 🩸 IINTS – Open-Source Insulin Pump for Raspberry Pi Pico  
 
-<img src="assets/IINTS logo.png" width="200">  
+<div align="center">
+  <img src="assets/IINTS_logo.png" width="200">
+</div>  
 
 **IINTS** (Intelligent Insulin Therapy System) is an **open-source insulin pump project** designed for affordability and accessibility.  
 Built with **MicroPython** on a **Raspberry Pi Pico**, it controls insulin delivery using stepper motors and a user-friendly interface.  
