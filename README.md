@@ -78,11 +78,21 @@ All necessary 3D printable parts can be found in the `/stl` folder.
 
 ---
 
-## 🎥 3D Printing Timelapse  
+## 🎥 Timelapse of 3D Printing
 
-Check out the 3D printing timelapse of the IINTS components:
+Watch the 3D printing process in action! 🎬  
 
-<img src="assets/filmpje1.mp4" width="300">  
+### First Timelapse  
+[![Watch on YouTube](https://img.youtube.com/vi/ip77e91OB44/0.jpg)](https://www.youtube.com/watch?v=ip77e91OB44)  
+
+### Second Timelapse  
+[![Watch on YouTube](https://img.youtube.com/vi/o0uBUbY0rDM/0.jpg)](https://www.youtube.com/watch?v=o0uBUbY0rDM)  
+
+Or watch them directly below:  
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ip77e91OB44" frameborder="0" allowfullscreen></iframe>  
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/o0uBUbY0rDM" frameborder="0" allowfullscreen></iframe>
 
 ---
 
