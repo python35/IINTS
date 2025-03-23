@@ -80,17 +80,8 @@ All necessary 3D printable parts can be found in the `/stl` folder.
 
 ## 🎥 Timelapse of 3D Printing
 
-Watch the 3D printing process in action! 🎬  
-
-<iframe width="560" height="315" 
-    src="https://www.youtube.com/embed/ip77e91OB44?autoplay=1&loop=1&playlist=ip77e91OB44" 
-    frameborder="0" allowfullscreen>
-</iframe>
-
-<iframe width="560" height="315" 
-    src="https://www.youtube.com/embed/o0uBUbY0rDM?autoplay=1&loop=1&playlist=o0uBUbY0rDM" 
-    frameborder="0" allowfullscreen>
-</iframe>
+### Watch the 3D printing process in action! 🎥  
+▶️ [Click here to watch the timelapse videos](assets/videos.html)
 
 ---
 
