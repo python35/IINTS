@@ -16,11 +16,14 @@ IINTS was created in **2024** as a personal project to learn more about insulin 
 
 --- 
 
-🚀 **Milestones:**
-📌 **May 2024** – First working prototype using Raspberry Pi Pico
-📌 **July 2024** – Added OLED display and user interface
-📌 **December 2024** – Introduced microstepping for improved precision
-📌 **April 2025** – Awarded "Most Technically Complex Project" at **Coolest Projects Belgium**
+<h3>🚀 <strong>Milestones:</strong></h3>
+<ul>
+  <li>📌 <strong>May 2024</strong> – First working prototype using Raspberry Pi Pico</li>
+  <li>📌 <strong>July 2024</strong> – Added OLED display and user interface</li>
+  <li>📌 <strong>December 2024</strong> – Introduced microstepping for improved precision</li>
+  <li>📌 <strong>April 2025</strong> – Awarded "Most Technically Complex Project" at <strong>Coolest Projects Belgium</strong></li>
+</ul>
+
 
 ---
 
