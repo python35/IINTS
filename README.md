@@ -22,8 +22,8 @@ IINTS was created in **2024** as a personal project to learn more about insulin 
   <li>📌 <strong>July 2024</strong> – Added OLED display and user interface</li>
   <li>📌 <strong>December 2024</strong> – Introduced microstepping for improved precision</li>
   <li>📌 <strong>April 2025</strong> – Awarded "Most Technically Complex Project" at <strong>Coolest Projects Belgium</strong></li>
+  <li>📌 <strong>May 2025</strong> – Named "Student in the Spotlight" for the third time, this year for this project</li>
 </ul>
-
 
 ---
 
