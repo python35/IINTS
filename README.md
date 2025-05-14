@@ -30,6 +30,7 @@ IINTS was created in **2024** as a personal project to learn more about insulin 
 💡 **Special Thanks**  
 
 A huge thank you to the **coaches of CoderDojo Genk and Hasselt** for their incredible guidance and support throughout this project. Their mentorship has been invaluable in helping me bring this idea to life! 🙌  
+
 ---
 
 ## 📌 Features  
@@ -105,67 +106,3 @@ Connect to your Raspberry Pi Pico and run:
 ```python
 import os
 os.uname()
-```
-
----
-
-### 2️⃣ Install **Thonny IDE**  
-Thonny is recommended for coding and uploading MicroPython scripts.  
-
-👅 Download: [https://thonny.org](https://thonny.org)  
-
-Steps:  
-1. Open Thonny  
-2. Select **Raspberry Pi Pico** as the interpreter  
-3. Install **MicroPython firmware** if not already installed  
-
----
-
-### 3️⃣ Clone This Repository  
-Run this command to download the project:  
-```sh
-git clone https://github.com/python35/IINTS.git
-```
-Or manually **Download ZIP** from GitHub.  
-
----
-
-### 4️⃣ Upload to Raspberry Pi Pico  
-1. Connect **Raspberry Pi Pico** via USB  
-2. Open **Thonny**  
-3. Copy `main.py` and other files to the Pico  
-4. Click **Run**  
-
----
-
-## ⚙️ Configuration  
-Edit **config.py** to set parameters:  
-```python
-INSULIN_RATE = 1.0  # Units per second
-STEP_MOTOR_SPEED = 200  # Steps per second
-DISPLAY_BRIGHTNESS = 0.8  # 80% brightness
-```
-Adjust based on your needs.  
-
----
-
-## 📚 License  
-This project is **MIT Licensed**, meaning you can freely use, modify, and distribute it.  
-However, **this is NOT a certified medical device** – use it responsibly.  
-
----
-
-## 🤝 Contributing  
-Want to improve the project? Fork the repository and submit a **Pull Request**.  
-
----
-
-## 📢 Disclaimer  
-🚨 **Warning:** This project is for **educational and research purposes only**.  
-It is **not an FDA-approved medical device**. Always consult a medical professional before using insulin pumps.  
-
----
-
-### 👅 Download & Start Building!  
-🔽 **[Clone the repository](https://github.com/YOUR_USERNAME/IINTS.git) and start experimenting!**
-
