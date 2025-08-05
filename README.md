@@ -23,6 +23,7 @@ IINTS was created in **2024** as a personal project to learn more about insulin 
   <li>📌 <strong>December 2024</strong> – Introduced microstepping for improved precision</li>
   <li>📌 <strong>April 2025</strong> – Awarded "Most Technically Complex Project" at <strong>Coolest Projects Belgium</strong></li>
   <li>📌 <strong>May 2025</strong> – Named "Student in the Spotlight" for the third time, this year for IINTS!</li>
+  <li>📌 <strong>July 2025</strong> – I was among the top 7% of applicants from over 120 countries for a place at the CERN Solvay camp</li>
 </ul>
 
 ---
