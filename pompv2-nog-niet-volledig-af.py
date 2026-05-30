@@ -18,6 +18,7 @@ bl.value(1)
 buffer = bytearray(240 * 240 * 2)
 fb = framebuf.FrameBuffer(buffer, 240, 240, framebuf.RGB565)
 
+
 def draw_text_centered(text, color=0xFFFF):
     fb.fill(0x0000)
     text_width = len(text) * 8
@@ -141,6 +142,7 @@ while True:
     # Stap 0: Stel totale dagdosis in
     if stap == 0:
         draw_text_centered(f"Dagdos: {totale_dagdosis}U")
+        utime.sleep(1)
         if button_held(happy_button, delay=0.3):
             totale_dagdosis = verander_waarde(totale_dagdosis, 'omhoog')
             draw_text_centered(f"Dagdos: {totale_dagdosis}U")
