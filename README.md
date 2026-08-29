@@ -13,6 +13,12 @@ The first generation of IINTS combines a **Raspberry Pi Pico**, a **stepper-driv
 > **Important:** IINTS is an educational and research prototype.
 > It is **not a medical device**, has not been clinically validated or certified, and must **not be used to administer insulin or any other medication to a person**.
 
+## Project Generations
+
+- **MK.1:** The original pump files remain in the repository root.
+- **MK.2:** The second-generation firmware, Calm Mode, simulator, assets, and
+  documentation are available in [`/mk2`](mk2/README.md).
+
 ---
 
 ## About the Project

@@ -1,0 +1,4 @@
+Pillow>=11.0,<13
+mpremote==1.28.0
+mpy_cross==1.27.0.post2
+

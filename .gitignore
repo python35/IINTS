@@ -172,3 +172,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Local macOS and MK.2 development files
+.DS_Store
+pico_backups/
+mk2/simulator/ui_previews/
