@@ -1,11 +1,17 @@
-# IINTS – Open-Source Insulin Pump for Raspberry Pi Pico  
+# IINTS – Open-Source Insulin Pump Prototype
 
 <div align="center">
   <img src="assets/IINTS_banner.png" width="1200">
 </div>
 
-**IINTS** (Insuline Is Not The Solution) is an **open-source insulin pump project** designed for affordability and accessibility.  
-Built with **MicroPython** on a **Raspberry Pi Pico**, it controls insulin delivery using stepper motors and a user-friendly interface.  
+**IINTS** (*Insuline Is Not The Solution*) is an open-source educational insulin pump prototype built around the **Raspberry Pi Pico**.
+
+The project started as an experiment to understand how insulin pumps work from an engineering perspective: how a motor can create precise linear movement, how that movement can be translated into fluid displacement, and how embedded software can control the complete mechanism.
+
+The first generation of IINTS combines a **Raspberry Pi Pico**, a **stepper-driven syringe mechanism**, a display, physical controls, and a 3D-printed enclosure.
+
+> **Important:** IINTS is an educational and research prototype.
+> It is **not a medical device**, has not been clinically validated or certified, and must **not be used to administer insulin or any other medication to a person**.
 
 ## Project Generations
 
@@ -13,285 +19,385 @@ Built with **MicroPython** on a **Raspberry Pi Pico**, it controls insulin deliv
 - **MK.2:** The second-generation firmware, Calm Mode, simulator, assets, and
   documentation are available in [`/mk2`](mk2/README.md).
 
-🔹 **Customizable** | 🔹 **Affordable** | 🔹 **Open-Source** | 🔹 **Made for Everyone**  
+---
+
+## About the Project
+
+I started IINTS in **2024** after becoming curious about the technology behind the insulin pumps I had been using for most of my life.
+
+Instead of treating the pump as a closed box, I wanted to understand what was happening inside it:
+
+* How does a pump physically move a small amount of fluid?
+* How can a stepper motor be controlled accurately?
+* How do mechanical dimensions influence displacement?
+* How can an embedded user interface control the mechanism?
+* What engineering challenges appear when combining electronics, software and mechanics into a small device?
+
+IINTS became my way of exploring those questions by building a pump mechanism from scratch.
+
+The project is published as open source so that others interested in **embedded systems, electronics, programming, 3D printing and medical technology** can study and experiment with the concepts behind it.
 
 ---
 
-## Project History  
-IINTS was created in **2024** as a personal project to learn more about insulin pumps and their mechanics. As someone with 13 years of experience living with diabetes, I was curious about how these devices work and wanted to build one myself. While not intended as a commercial alternative, I am sharing this project as an open-source learning experience for anyone interested in electronics, programming, and medical technology.
+## Project History
 
---- 
+### Milestones
 
-<h3><strong>Milestones:</strong></h3>
-<ul>
-  <li><strong>May 2024</strong> – First working prototype using Raspberry Pi Pico</li>
-  <li><strong>July 2024</strong> – Added OLED display and user interface</li>
-  <li><strong>December 2024</strong> – Introduced microstepping for improved precision</li>
-  <li><strong>April 2025</strong> – Awarded "Most Technically Complex Project" at <strong>Coolest Projects Belgium</strong></li>
-  <li><strong>May 2025</strong> – Named "Student in the Spotlight" for the third time, this year for IINTS!</li>
-  <li><strong>July 2025</strong> – I was among the top 7% of applicants from over 120 countries for a place at the CERN Solvay camp</li>
-  <li><strong>August 2025</strong> – Spoke at the CIONET Summer Festival</li>
-  <li><strong>October 2025</strong> – Spoke at HackYeah in Kraków Poland AKA the biggest LAN Hackathon in Europe</li>
-</ul>
+* **May 2024** – First working prototype using a Raspberry Pi Pico
+* **July 2024** – Added a display and user interface
+* **December 2024** – Introduced microstepping experiments to improve motor control and mechanical resolution
+* **April 2025** – Awarded **Most Technically Complex Project** at Coolest Projects Belgium
+* **May 2025** – Named **Student in the Spotlight** for the third time, this time for IINTS
+* **July 2025** – Ranked among the top 7% of applicants from more than 120 countries for the CERN Solvay Student Camp
+* **August 2025** – Presented IINTS at the CIONET Summer Festival
+* **October 2025** – Presented the project at HackYeah in Kraków, Poland
 
 ---
 
-💡 **Special Thanks**  
+## Hardware Overview
 
-A huge thank you to the **coaches of CoderDojo Genk and Hasselt** for their incredible guidance and support throughout this project. Their mentorship has been invaluable in helping me bring this idea to life!  
+The first-generation IINTS prototype consists of several main subsystems:
+
+### Controller
+
+* **Raspberry Pi Pico**
+* RP2040 microcontroller
+* Firmware written in **MicroPython**
+
+The Pico controls the motor, display and physical user inputs.
+
+### Motor System
+
+A small stepper motor drives a threaded linear mechanism.
+
+Rotational movement from the motor is converted into linear movement, which pushes the syringe plunger forward.
+
+The motor is controlled through a dedicated motor driver.
+
+### User Interface
+
+The prototype includes:
+
+* Display-based interface
+* Physical push buttons
+* Motor control
+* Basic device status information
+
+### Mechanical System
+
+The mechanical assembly consists of:
+
+* Stepper motor
+* Threaded spindle / linear actuator
+* Syringe holder
+* Plunger mechanism
+* 3D-printed mounting components
+* 3D-printed enclosure
 
 ---
 
-## Features  
-**Stepper Motor Control** – Accurate insulin delivery using stepper motors  
-**User-Friendly Interface** – Buttons & Display for easy control  
-**Safety Mechanisms** – Basic fail-safes for reliable operation  
-**Customizable** – Modify dosage & settings as needed  
-**3D Printable** – Open-source STL files for hardware  
-**Open-Source** – Licensed under **MIT**, free for personal & medical research use  
+## How the Pump Mechanism Works
+
+The basic mechanical principle is relatively simple.
+
+A stepper motor rotates a threaded spindle. The spindle converts the rotational movement of the motor into linear movement.
+
+That linear movement pushes the plunger of a syringe.
+
+Because the dimensions of the syringe, spindle pitch and motor movement are known, the theoretical fluid displacement per motor revolution or motor step can be estimated.
+
+### Volume per Revolution
+
+For a syringe with internal radius \(r\) and a spindle with pitch \(p\):
+
+$$
+V_{rev} = \pi r^2 p
+$$
+
+where:
+
+* \(V_{rev}\) = theoretical displaced volume per spindle revolution
+* \(r\) = internal radius of the syringe
+* \(p\) = linear spindle travel per revolution
+
+### Volume per Motor Step
+
+If the motor requires \(N_{steps}\) controlled steps for one revolution:
+
+$$
+V_{step} = \frac{V_{rev}}{N_{steps}}
+$$
+
+This provides a theoretical relationship between motor movement and syringe displacement.
+
+These equations describe the **mechanical principle only**. Real systems are affected by factors such as backlash, friction, syringe tolerances, motor accuracy, compliance and assembly tolerances.
+
+The calculations in this repository must therefore **not be interpreted as validated medication-delivery accuracy**.
 
 ---
 
-## Project Images  
+## Features
+
+### Raspberry Pi Pico Control
+
+The device is controlled by an RP2040-based Raspberry Pi Pico running MicroPython.
+
+### Stepper Motor Control
+
+A stepper motor provides controlled mechanical movement of the syringe plunger.
+
+### Display Interface
+
+A small display provides a graphical interface for interacting with the prototype.
+
+### Physical Controls
+
+Push buttons allow the user to navigate the interface and control the demonstrator.
+
+### 3D-Printed Mechanism
+
+The enclosure and several mechanical components can be produced using a standard FDM 3D printer.
+
+### Open Source
+
+The firmware, mechanical designs and documentation are publicly available so that the project can be studied, modified and improved.
+
+---
+
+## Project Images
 
 <table align="center">
   <tr>
-    <td align="center"><img src="assets/depomp.jpg" width="300"></td>
+    <td align="center">
+      <img src="assets/depomp.jpg" width="300">
+    </td>
   </tr>
   <tr>
-    <td align="center">Prototype final version</td>
+    <td align="center">
+      First-generation IINTS prototype
+    </td>
   </tr>
 </table>
 
 ---
 
-## Hardware Requirements  
-### Core Hardware  
-- **Raspberry Pi Pico (RP2040)**
-- **OLED/TFT Display** (for UI)
-- **Stepper Motor + Driver** (e.g., A4988, ULN2003)
-- **Push Buttons** (for user input)
-- **Battery / Power Supply**  
+## Hardware
 
-### Insulin Pump Mechanism  
-- **Syringe Pump Setup** (or peristaltic pump)
-- **3D Printed Mounts** (STL files included!)  
+The exact hardware used has changed during development, but the prototype is built around the following components.
 
----
+### Electronics
 
-## 3D Printing Files  
+* **Raspberry Pi Pico (RP2040)**
+* **TFT / graphical display**
+* **Stepper motor**
+* **Stepper motor driver**
+* **Physical push buttons**
+* **USB or battery-based power supply**
 
-All necessary 3D printable parts can be found in the `/stl` folder.  
+### Mechanical Components
 
- **Download STL Files**: [STL Folder](https://github.com/python35/IINTS/tree/main/stl)  
+* Syringe-based linear mechanism
+* Threaded spindle / actuator
+* Motor mount
+* Syringe mount
+* Plunger interface
+* 3D-printed enclosure
 
-### Recommended Print Settings  
-- **Material:** PLA or PETG  
-- **Layer height:** 0.2mm  
-- **Infill:** 20%  
-- **Supports:** Not required  
-- **Bed adhesion:** Brim or skirt  
+> Different revisions of the prototype may use different components or wiring.
+> Check the firmware and hardware files in the repository for the configuration corresponding to a specific revision.
 
 ---
 
-## Timelapse of 3D Printing
+## 3D Printing
 
-### Watch the 3D printing process in action! 🎥  
-![3D Print Timelapse 1](assets/filmpje1.gif)  
-![3D Print Timelapse 2](assets/filmpje2.gif)  
+The available 3D-printable components can be found in the [`/stl`](https://github.com/python35/IINTS/tree/main/stl) directory.
+
+### Suggested Starting Settings
+
+These settings were used as a general starting point during prototyping:
+
+* **Material:** PLA or PETG
+* **Layer height:** 0.2 mm
+* **Infill:** approximately 20%
+* **Bed adhesion:** skirt or brim where necessary
+* **Supports:** dependent on part orientation
+
+These are prototype settings rather than strict manufacturing specifications.
 
 ---
 
-## Installation Guide  
+## 3D Printing Timelapses
 
-### Install **MicroPython**  
-Ensure you're using the correct **MicroPython version**:  
-🔹 **MicroPython v1.23.0 (2024-06-02) for Raspberry Pi Pico**  
+![3D Print Timelapse 1](assets/filmpje1.gif)
 
- **Download Here:** [https://micropython.org/download/RPI_PICO](https://micropython.org/download/RPI_PICO)  
+![3D Print Timelapse 2](assets/filmpje2.gif)
 
-#### Check Your MicroPython Version:  
-Connect to your Raspberry Pi Pico and run:  
+---
+
+## Software
+
+The firmware is written in **MicroPython** and runs directly on the Raspberry Pi Pico.
+
+### MicroPython Version
+
+The original prototype was developed using:
+
+**MicroPython v1.23.0 – 2024-06-02**
+
+for the Raspberry Pi Pico.
+
+MicroPython firmware for the Raspberry Pi Pico is available at:
+
+https://micropython.org/download/RPI_PICO/
+
+### Check the Installed Version
+
+Connect to the MicroPython REPL and run:
+
 ```python
 import os
-os.uname()
-````
+print(os.uname())
+```
 
 ---
 
-### Install **Thonny IDE**
+## Development Environment
 
-Thonny is recommended for coding and uploading MicroPython scripts.
+The original firmware was primarily developed using **Thonny**.
 
-Download: [https://thonny.org](https://thonny.org)
+Thonny can be downloaded from:
 
-Steps:
+https://thonny.org/
 
-1. Open Thonny
-2. Select **Raspberry Pi Pico** as the interpreter
-3. Install **MicroPython firmware** if not already installed
+### Raspberry Pi Pico Setup
+
+1. Connect the Raspberry Pi Pico to your computer.
+2. Open Thonny.
+3. Select the Raspberry Pi Pico / MicroPython interpreter.
+4. Install MicroPython on the Pico if necessary.
+5. Copy the required project files to the Pico.
+6. Run the firmware.
 
 ---
 
-### Clone This Repository
+## Clone the Repository
 
-Run this command to download the project:
-
-```sh
+```bash
 git clone https://github.com/python35/IINTS.git
+cd IINTS
 ```
 
-Or manually **Download ZIP** from GitHub.
+You can also download the repository as a ZIP file directly from GitHub.
 
 ---
 
-### Upload to Raspberry Pi Pico
+## Repository Structure
 
-1. Connect **Raspberry Pi Pico** via USB
-2. Open **Thonny**
-3. Copy `main.py` and other files to the Pico
-4. Click **Run**
+The repository contains the different parts of the first-generation IINTS project, including firmware, assets and mechanical files.
 
----
+For example:
 
-## Configuration
-
-Edit **config.py** to set parameters:
-
-```python
-INSULIN_RATE = 1.0  # Units per second
-STEP_MOTOR_SPEED = 200  # Steps per second
-DISPLAY_BRIGHTNESS = 0.8  # 80% brightness
+```text
+IINTS/
+├── assets/
+│   └── project images and media
+│
+├── stl/
+│   └── 3D-printable components
+│
+├── main.py
+│   └── main MicroPython firmware
+│
+└── README.md
 ```
 
-Adjust based on your needs.
+The exact structure may change as the repository evolves.
 
 ---
 
-## License
+## What This Project Is
 
-This project is **MIT Licensed**, meaning you can freely use, modify, and distribute it.
-However, **this is NOT a certified medical device** – use it responsibly.
+IINTS is intended as:
+
+* an educational embedded-systems project
+* an exploration of insulin-pump mechanics
+* an open-source hardware experiment
+* a way to study stepper motor control
+* a project for learning MicroPython
+* an example of combining electronics, software and 3D printing
+* a platform for discussing transparency in medical technology
+
+---
+
+## What This Project Is Not
+
+IINTS is **not**:
+
+* a certified insulin pump
+* a replacement for a commercial insulin pump
+* clinically validated
+* intended for treatment decisions
+* intended for administering medication
+* a source of medical dosing advice
+* suitable for human use
+
+The project demonstrates engineering concepts only.
 
 ---
 
 ## Contributing
 
-Want to improve the project? Fork the repository and submit a **Pull Request**.
+Contributions are welcome.
+
+If you want to experiment with the project:
+
+1. Fork the repository.
+2. Create your own branch.
+3. Make and document your changes.
+4. Submit a Pull Request.
+
+Improvements to the firmware, documentation, electronics, mechanical design and simulation tools are all welcome.
+
+Please keep the educational and non-clinical nature of the project clear when contributing.
 
 ---
 
-## Disclaimer
+## License
 
-🚨 **Warning:** This project is for **educational and research purposes only**.
-It is **not an FDA-approved medical device**. Always consult a medical professional before using insulin pumps.
+This repository is licensed under the **MIT License**.
 
----
+The license allows the source code and project files to be used, modified and redistributed under the terms of the MIT License.
 
-### Download & Start Building!
-
-**[Clone the repository](https://github.com/YOUR_USERNAME/IINTS.git) and start experimenting!**
+The MIT License does **not** imply that the hardware or software is safe, clinically validated, medically approved or suitable for use as a medical device.
 
 ---
 
-## **Mathematical and Scientific Explanation of Insulin Dosing**
+## Safety Disclaimer
 
-Insulin dosing is often calculated based on several key factors, including the individual's blood glucose level, the amount of carbohydrates they have consumed, and their insulin sensitivity. Below is an overview of how insulin dosages can be calculated:
+**IINTS is an experimental educational prototype.**
 
----
+The hardware, firmware, mechanical components and calculations in this repository have **not been designed, tested, validated or certified for clinical use**.
 
-### **Insulin to Carbohydrate Ratio (ICR)**
+Do not connect this prototype to a person and do not use it to administer insulin, medication or other substances.
 
-The **Insulin to Carbohydrate Ratio (ICR)** determines how much insulin is needed to process a certain amount of carbohydrates. A common ratio might be 1 unit of insulin for every 10 grams of carbohydrates (1:10 ratio). This ratio varies per individual based on their insulin sensitivity and time of day.
+Commercial insulin pumps are safety-critical medical devices that require extensive engineering controls, verification, validation, risk management, manufacturing controls and regulatory approval. This project does not provide those guarantees.
 
-#### **Formula for calculating insulin dosage based on carbohydrates:**
-
-$$
-\text{Insulin dosage (units)} = \frac{\text{Carbohydrate intake (grams)}}{\text{Insulin-Carbohydrate Ratio (grams per unit)}}
-$$
-
-**Example:**
-If a person eats 30 grams of carbohydrates and their insulin-to-carbohydrate ratio is 1:10, the calculation would be:
-
-$$
-\text{Insulin dosage} = \frac{30}{10} = 3 \text{ units of insulin}
-$$
+Use the repository only for **education, research and engineering experimentation**.
 
 ---
 
-### **Insulin Sensitivity Factor (ISF)**
+## Special Thanks
 
-The **Insulin Sensitivity Factor (ISF)** measures how much the blood glucose level of a person will drop for each unit of insulin injected. A typical value might be that 1 unit of insulin lowers the blood glucose level by 50 mg/dL.
+A special thank you to the **coaches of CoderDojo Genk and Hasselt** for their guidance and support throughout the development of IINTS.
 
-#### **Formula for calculating insulin dosage based on blood glucose:**
-
-$$
-\text{Insulin dosage (units)} = \frac{\text{Current blood glucose level} - \text{Target blood glucose}}{\text{Insulin Sensitivity Factor}}
-$$
-
-**Example:**
-If the current blood glucose level is 200 mg/dL, the target is 120 mg/dL, and the ISF is 50 mg/dL per unit:
-
-$$
-\text{Insulin dosage} = \frac{200 - 120}{50} = \frac{80}{50} = 1.6 \text{ units of insulin}
-$$
+Their feedback and mentorship helped turn an early experiment into a much larger engineering and educational project.
 
 ---
 
-### **Total Daily Dose (TDD)**
+## Related Development
 
-The **Total Daily Dose (TDD)** is an estimate of the total amount of insulin a person needs in a day. It can vary based on individual needs, but a common formula is:
+This repository documents the **original hardware-focused generation of IINTS**.
 
-#### **Formula for calculating TDD:**
+The project has since grown beyond the physical pump prototype into broader research and educational work around diabetes technology, simulation, algorithmic safety and transparent medical technology.
 
-$$
-\text{TDD} = \text{Basal insulin} + \text{Bolus insulin (for meals and corrections)}
-$$
-
-A rough estimate of the TDD can be calculated based on the individual's weight:
-
-$$
-\text{TDD (units)} = \text{Weight (kg)} \times 0.5 \, \text{to} \, 1.0
-$$
-
-**Example:**
-For a person weighing 70 kg, the estimated TDD might range between 35 and 70 units, depending on their specific needs.
-
----
-
-### **Bolus Insulin and Correction Dose**
-
-Bolus insulin is given to address the blood glucose levels after meals or to correct elevated blood glucose levels. The dosage is calculated based on the insulin-to-carbohydrate ratio (for meals) and the insulin sensitivity factor (for corrections).
-
-#### **Formula for bolus insulin for a meal:**
-
-$$
-\text{Bolus insulin (units)} = \frac{\text{Carbohydrates consumed}}{\text{Insulin-Carbohydrate Ratio}}
-$$
-
-#### **Formula for correction dose:**
-
-$$
-\text{Correction dose} = \frac{\text{Current blood glucose level} - \text{Target blood glucose}}{\text{Insulin Sensitivity Factor}}
-$$
-
----
-
-### **Complications of Incorrect Calculations**
-
-Incorrect insulin dosages can lead to **hypoglycemia** (low blood glucose) or **hyperglycemia** (high blood glucose), which can result in serious health risks. Regular blood glucose monitoring and accurate calculations are crucial for proper diabetes management. This is where a device like the **IINTS insulin pump** can help ensure precise, tailored dosages for better diabetes management.
-
----
-
-### **Advanced Algorithms for Insulin Delivery**
-
-Advanced insulin pumps use algorithms to automatically adjust insulin delivery based on real-time needs. These systems take into account:
-
-* **Carbohydrate intake prediction**
-* **Blood glucose trends**
-* **Physical activity**
-* **Sleep cycles**
-
-Such algorithms can provide **smarter insulin delivery**, ensuring more accurate and efficient insulin management than manual calculations.
-
----
+The original pump remains an important part of that story: it was the starting point for understanding what happens between a line of software and the physical movement of a medical device.
