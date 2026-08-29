@@ -7,6 +7,12 @@
 **IINTS** (Insuline Is Not The Solution) is an **open-source insulin pump project** designed for affordability and accessibility.  
 Built with **MicroPython** on a **Raspberry Pi Pico**, it controls insulin delivery using stepper motors and a user-friendly interface.  
 
+## Project Generations
+
+- **MK.1:** The original pump files remain in the repository root.
+- **MK.2:** The second-generation firmware, Calm Mode, simulator, assets, and
+  documentation are available in [`/mk2`](mk2/README.md).
+
 🔹 **Customizable** | 🔹 **Affordable** | 🔹 **Open-Source** | 🔹 **Made for Everyone**  
 
 ---
