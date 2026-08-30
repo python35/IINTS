@@ -1,403 +1,231 @@
-# IINTS – Open-Source Insulin Pump Prototype
+# IINTS MK2
 
-<div align="center">
-  <img src="assets/IINTS_banner.png" width="1200">
-</div>
+**Second-generation neuro-inclusive insulin pump simulator, open hardware
+study, and electromechanical research demonstrator**
 
-**IINTS** (*Insuline Is Not The Solution*) is an open-source educational insulin pump prototype built around the **Raspberry Pi Pico**.
+> You are viewing the **`mk2` branch**. For the original first-generation
+> project, open the [`mk1` branch](https://github.com/python35/IINTS/tree/mk1).
 
-The project started as an experiment to understand how insulin pumps work from an engineering perspective: how a motor can create precise linear movement, how that movement can be translated into fluid displacement, and how embedded software can control the complete mechanism.
+> [!CAUTION]
+> **Research and education prototype only.** IINTS MK2 is not a certified
+> medical device. It must not be used to make treatment decisions or deliver
+> insulin to a person. Test it disconnected from a person and use water or
+> another harmless test liquid.
 
-The first generation of IINTS combines a **Raspberry Pi Pico**, a **stepper-driven syringe mechanism**, a display, physical controls, and a 3D-printed enclosure.
-
-> **Important:** IINTS is an educational and research prototype.
-> It is **not a medical device**, has not been clinically validated or certified, and must **not be used to administer insulin or any other medication to a person**.
-
-## Project Generations
-
-- **MK.1:** The original pump files remain in the repository root.
-- **MK.2:** The second-generation firmware, Calm Mode, simulator, assets, and
-  documentation are available in [`/mk2`](mk2/README.md).
-
----
-
-## About the Project
-
-I started IINTS in **2024** after becoming curious about the technology behind the insulin pumps I had been using for most of my life.
-
-Instead of treating the pump as a closed box, I wanted to understand what was happening inside it:
-
-* How does a pump physically move a small amount of fluid?
-* How can a stepper motor be controlled accurately?
-* How do mechanical dimensions influence displacement?
-* How can an embedded user interface control the mechanism?
-* What engineering challenges appear when combining electronics, software and mechanics into a small device?
-
-IINTS became my way of exploring those questions by building a pump mechanism from scratch.
-
-The project is published as open source so that others interested in **embedded systems, electronics, programming, 3D printing and medical technology** can study and experiment with the concepts behind it.
-
----
-
-## Project History
-
-### Milestones
-
-* **May 2024** – First working prototype using a Raspberry Pi Pico
-* **July 2024** – Added a display and user interface
-* **December 2024** – Introduced microstepping experiments to improve motor control and mechanical resolution
-* **April 2025** – Awarded **Most Technically Complex Project** at Coolest Projects Belgium
-* **May 2025** – Named **Student in the Spotlight** for the third time, this time for IINTS
-* **July 2025** – Ranked among the top 7% of applicants from more than 120 countries for the CERN Solvay Student Camp
-* **August 2025** – Presented IINTS at the CIONET Summer Festival
-* **October 2025** – Presented the project at HackYeah in Kraków, Poland
-
----
-
-## Hardware Overview
-
-The first-generation IINTS prototype consists of several main subsystems:
-
-### Controller
-
-* **Raspberry Pi Pico**
-* RP2040 microcontroller
-* Firmware written in **MicroPython**
-
-The Pico controls the motor, display and physical user inputs.
-
-### Motor System
-
-A small stepper motor drives a threaded linear mechanism.
-
-Rotational movement from the motor is converted into linear movement, which pushes the syringe plunger forward.
-
-The motor is controlled through a dedicated motor driver.
-
-### User Interface
-
-The prototype includes:
-
-* Display-based interface
-* Physical push buttons
-* Motor control
-* Basic device status information
-
-### Mechanical System
-
-The mechanical assembly consists of:
-
-* Stepper motor
-* Threaded spindle / linear actuator
-* Syringe holder
-* Plunger mechanism
-* 3D-printed mounting components
-* 3D-printed enclosure
-
----
-
-## How the Pump Mechanism Works
-
-The basic mechanical principle is relatively simple.
-
-A stepper motor rotates a threaded spindle. The spindle converts the rotational movement of the motor into linear movement.
-
-That linear movement pushes the plunger of a syringe.
-
-Because the dimensions of the syringe, spindle pitch and motor movement are known, the theoretical fluid displacement per motor revolution or motor step can be estimated.
-
-### Volume per Revolution
-
-For a syringe with internal radius \(r\) and a spindle with pitch \(p\):
-
-$$
-V_{rev} = \pi r^2 p
-$$
-
-where:
-
-* \(V_{rev}\) = theoretical displaced volume per spindle revolution
-* \(r\) = internal radius of the syringe
-* \(p\) = linear spindle travel per revolution
-
-### Volume per Motor Step
-
-If the motor requires \(N_{steps}\) controlled steps for one revolution:
-
-$$
-V_{step} = \frac{V_{rev}}{N_{steps}}
-$$
-
-This provides a theoretical relationship between motor movement and syringe displacement.
-
-These equations describe the **mechanical principle only**. Real systems are affected by factors such as backlash, friction, syringe tolerances, motor accuracy, compliance and assembly tolerances.
-
-The calculations in this repository must therefore **not be interpreted as validated medication-delivery accuracy**.
-
----
-
-## Features
-
-### Raspberry Pi Pico Control
-
-The device is controlled by an RP2040-based Raspberry Pi Pico running MicroPython.
-
-### Stepper Motor Control
-
-A stepper motor provides controlled mechanical movement of the syringe plunger.
-
-### Display Interface
-
-A small display provides a graphical interface for interacting with the prototype.
-
-### Physical Controls
-
-Push buttons allow the user to navigate the interface and control the demonstrator.
-
-### 3D-Printed Mechanism
-
-The enclosure and several mechanical components can be produced using a standard FDM 3D printer.
-
-### Open Source
-
-The firmware, mechanical designs and documentation are publicly available so that the project can be studied, modified and improved.
-
----
-
-## Project Images
-
-<table align="center">
+<table>
   <tr>
-    <td align="center">
-      <img src="assets/depomp.jpg" width="300">
+    <td width="50%" align="center">
+      <img src="mk2/assets/hardware/mk2-controller-prototype.jpg" width="430" alt="Photograph of the IINTS MK2 controller PCB">
+    </td>
+    <td width="50%" align="center">
+      <img src="mk2/simulator/previews/calm-mode-home.png" width="430" alt="IINTS MK2 Calm Mode home screen">
     </td>
   </tr>
   <tr>
-    <td align="center">
-      First-generation IINTS prototype
-    </td>
+    <td align="center"><strong>MK2 controller prototype</strong></td>
+    <td align="center"><strong>Calm Mode interface</strong></td>
   </tr>
 </table>
 
----
+## About MK2
 
-## Hardware
+IINTS MK2 is the second generation of the IINTS project. It combines a
+Raspberry Pi Pico, a 240 x 240 ST7789 IPS display, three physical buttons, a
+DRV8833 motor driver, a bipolar stepper motor, a virtual glucose sensor, and a
+desktop UI simulator.
 
-The exact hardware used has changed during development, but the prototype is built around the following components.
+MK2 explores two questions together:
 
-### Electronics
+1. How can an embedded pump mechanism, user interface, and educational dosing
+   model be built transparently from open source components?
+2. How can the interaction be calmer and easier to follow for children and
+   neurodivergent users without hiding clinically relevant information?
 
-* **Raspberry Pi Pico (RP2040)**
-* **TFT / graphical display**
-* **Stepper motor**
-* **Stepper motor driver**
-* **Physical push buttons**
-* **USB or battery-based power supply**
+The current interface is in English and uses glucose values in `mg/dL`.
 
-### Mechanical Components
+## Main Features
 
-* Syringe-based linear mechanism
-* Threaded spindle / actuator
-* Motor mount
-* Syringe mount
-* Plunger interface
-* 3D-printed enclosure
+- virtual CGM updates every minute with rising, steady, and falling trends;
+- Standard Mode with glucose, IOB, COB, carbohydrate, and dose information;
+- low-sensory **Calm Mode** with one decision per screen;
+- guided meal-size and bolus flow;
+- separate Adult Check with a deliberate hold before motor movement;
+- glucose history, settings, button guide, manual rewind, and Calm Pause;
+- automatic lock and power-saving sleep;
+- delivery animation and flashing onboard LED while the motor runs;
+- cancellable motor movement with completed-step tracking;
+- desktop simulator that runs the real firmware drawing functions;
+- published MicroPython source, deploy package, project report, UI assets,
+  controller photograph, and editable KiCad V2 design files.
 
-> Different revisions of the prototype may use different components or wiring.
-> Check the firmware and hardware files in the repository for the configuration corresponding to a specific revision.
+## Start Here
 
----
+The complete MK2 technical documentation is available in:
 
-## 3D Printing
+### [Open the full MK2 README](mk2/README.md)
 
-The available 3D-printable components can be found in the [`/stl`](https://github.com/python35/IINTS/tree/main/stl) directory.
+It contains the complete pin mapping, button legend, settings, educational
+calculations, virtual CGM behaviour, power management, simulator instructions,
+Pico deployment procedure, troubleshooting, testing order, and limitations.
 
-### Suggested Starting Settings
+## Open Project Files
 
-These settings were used as a general starting point during prototyping:
+| Area | Files |
+| --- | --- |
+| Complete MK2 documentation | [`mk2/README.md`](mk2/README.md) |
+| Canonical MicroPython firmware | [`mk2/firmware/pico_drv8833_correct_pins.py`](mk2/firmware/pico_drv8833_correct_pins.py) |
+| Ready-to-upload Pico filesystem | [`mk2/firmware/deploy/`](mk2/firmware/deploy/) |
+| Desktop UI simulator | [`mk2/simulator/`](mk2/simulator/) |
+| Complete UI overview | [`mk2/simulator/previews/current-ui-overview.png`](mk2/simulator/previews/current-ui-overview.png) |
+| PCB V2 KiCad source | [`mk2/hardware/pcb-v2/`](mk2/hardware/pcb-v2/) |
+| MK2 controller photograph | [`mk2/assets/hardware/`](mk2/assets/hardware/) |
+| Calm Mode documentation | [`mk2/docs/NEURODIVERGENT_MODE.md`](mk2/docs/NEURODIVERGENT_MODE.md) |
+| UI simulator guide | [`mk2/docs/UI_SIMULATOR.md`](mk2/docs/UI_SIMULATOR.md) |
+| Project report | [`mk2/docs/IINTS-MK2.pdf`](mk2/docs/IINTS-MK2.pdf) |
 
-* **Material:** PLA or PETG
-* **Layer height:** 0.2 mm
-* **Infill:** approximately 20%
-* **Bed adhesion:** skirt or brim where necessary
-* **Supports:** dependent on part orientation
+## Repository Structure
 
-These are prototype settings rather than strict manufacturing specifications.
-
----
-
-## 3D Printing Timelapses
-
-![3D Print Timelapse 1](assets/filmpje1.gif)
-
-![3D Print Timelapse 2](assets/filmpje2.gif)
-
----
-
-## Software
-
-The firmware is written in **MicroPython** and runs directly on the Raspberry Pi Pico.
-
-### MicroPython Version
-
-The original prototype was developed using:
-
-**MicroPython v1.23.0 – 2024-06-02**
-
-for the Raspberry Pi Pico.
-
-MicroPython firmware for the Raspberry Pi Pico is available at:
-
-https://micropython.org/download/RPI_PICO/
-
-### Check the Installed Version
-
-Connect to the MicroPython REPL and run:
-
-```python
-import os
-print(os.uname())
+```text
+mk2/
+|-- README.md                         # Complete MK2 documentation
+|-- assets/
+|   |-- branding/                     # IINTS branding and startup preview
+|   |-- bluey/                        # Calm Mode assets and rights notice
+|   `-- hardware/                     # MK2 controller photograph
+|-- docs/                             # Project report and focused guides
+|-- firmware/
+|   |-- pico_drv8833_correct_pins.py  # Readable source of truth
+|   |-- st7789.py                     # Display driver
+|   `-- deploy/                       # Ready-to-copy Pico files
+|-- hardware/
+|   `-- pcb-v2/                       # Editable KiCad 9 design source
+|-- simulator/                        # Desktop UI simulator and previews
+|-- tools/                            # Asset preparation and hardware tests
+`-- requirements.txt                  # Desktop development dependencies
 ```
 
----
+Some first-generation files remain in the repository history and root for
+traceability. The maintained MK2 project lives under `mk2/`.
 
-## Development Environment
+## Neuro-Inclusive Calm Mode
 
-The original firmware was primarily developed using **Thonny**.
+Calm Mode keeps the glucose value and trend visible while reducing the amount
+of information presented at once. It uses:
 
-Thonny can be downloaded from:
+- predictable screen structure;
+- muted colours and dark readable text;
+- written labels in addition to colour and arrows;
+- a small buddy image that does not cover the glucose value;
+- five consistent meal portions;
+- an adult review before motor movement;
+- a pause screen with three short, ordered steps;
+- optional animations.
 
-https://thonny.org/
+This is a research design direction, not a formally certified accessibility or
+medical-usability claim.
 
-### Raspberry Pi Pico Setup
+<details>
+<summary><strong>View all current MK2 screens</strong></summary>
 
-1. Connect the Raspberry Pi Pico to your computer.
-2. Open Thonny.
-3. Select the Raspberry Pi Pico / MicroPython interpreter.
-4. Install MicroPython on the Pico if necessary.
-5. Copy the required project files to the Pico.
-6. Run the firmware.
+![Complete IINTS MK2 UI overview](mk2/simulator/previews/current-ui-overview.png)
 
----
+</details>
 
-## Clone the Repository
+## Hardware And PCB V2
+
+The photographed prototype uses a Raspberry Pi Pico, ST7789 display, three
+buttons, and a DRV8833 motor-driver module. The firmware GPIO mapping is fully
+documented in the [technical MK2 README](mk2/README.md#wiring).
+
+The supplied KiCad project is published openly under
+[`mk2/hardware/pcb-v2/`](mk2/hardware/pcb-v2/). It contains the project,
+hierarchical schematics, and an early PCB placement file.
+
+> [!WARNING]
+> The KiCad PCB is an early design study. It still contains generic placeholder
+> footprints, is not routed, and does not match the photographed Pico board
+> one-to-one. It is not ready for fabrication. Read the
+> [PCB status notes](mk2/hardware/pcb-v2/README.md) before reusing it.
+
+Gerbers, drill files, BOM, and pick-and-place files are intentionally not
+present because no reviewed manufacturing release exists yet.
+
+## Run The UI Simulator
+
+The simulator does not connect to the Pico and cannot move the motor:
 
 ```bash
 git clone https://github.com/python35/IINTS.git
 cd IINTS
+git switch mk2
+cd mk2
+
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python simulator/ui_simulator.py
 ```
 
-You can also download the repository as a ZIP file directly from GitHub.
+On macOS, `mk2/simulator/Open UI Simulator.command` starts the same interface.
 
----
+## Deploy To A Pico
 
-## Repository Structure
-
-The repository contains the different parts of the first-generation IINTS project, including firmware, assets and mechanical files.
-
-For example:
+The low-memory runtime files are already collected in
+[`mk2/firmware/deploy/`](mk2/firmware/deploy/):
 
 ```text
-IINTS/
-├── assets/
-│   └── project images and media
-│
-├── stl/
-│   └── 3D-printable components
-│
-├── main.py
-│   └── main MicroPython firmware
-│
-└── README.md
+main.py
+pico_app.mpy
+st7789.py
+start.raw
+happy_calm.raw
+sad_calm.raw
+angry_calm.raw
 ```
 
-The exact structure may change as the repository evolves.
+Back up the Pico first, then upload those seven runtime files to its filesystem
+root with Thonny or `mpremote`. The compiled `.mpy` format must match the
+MicroPython version installed on the Pico. Full build and upload commands are
+in the [technical README](mk2/README.md#build-the-pico-application).
 
----
+## Educational Model
 
-## What This Project Is
+The active demonstration path includes:
 
-IINTS is intended as:
+- `ICR = 500 / TDD`;
+- `ISF = 1800 / TDD`;
+- a simplified quadratic IOB decay model;
+- linear COB decay over three or six hours;
+- meal and correction components with IOB/COB compensation;
+- a `70 mg/dL` low-glucose lockout;
+- a `15.0 U` single-bolus software limit;
+- a volatile 24-hour limit of `2 x TDD`;
+- motor conversion based on assumed reservoir and lead-screw geometry.
 
-* an educational embedded-systems project
-* an exploration of insulin-pump mechanics
-* an open-source hardware experiment
-* a way to study stepper motor control
-* a project for learning MicroPython
-* an example of combining electronics, software and 3D printing
-* a platform for discussing transparency in medical technology
+Experimental PID, predictive-low-glucose, and sensor-noise helpers exist in the
+source but are not connected to the active motor-delivery loop. MK2 must not be
+presented as a validated closed-loop artificial pancreas.
 
----
+## Current Limitations
 
-## What This Project Is Not
+- virtual CGM only;
+- no validated basal or closed-loop controller;
+- no persistent settings, dose log, or event log;
+- no occlusion, reservoir, battery, current, or position sensing;
+- no redundant processor or independent motor cutoff;
+- unfinished PCB V2 layout and no manufacturing package;
+- no formal medical-device, electrical-safety, usability, or clinical
+  validation.
 
-IINTS is **not**:
+## License And Artwork
 
-* a certified insulin pump
-* a replacement for a commercial insulin pump
-* clinically validated
-* intended for treatment decisions
-* intended for administering medication
-* a source of medical dosing advice
-* suitable for human use
+Original source code, KiCad files, and documentation are published under the
+repository's [MIT License](LICENSE).
 
-The project demonstrates engineering concepts only.
+The optional Bluey buddy images are third-party artwork and are not covered by
+the MIT License. IINTS is not affiliated with or endorsed by the relevant
+rights holders. See the [asset notice](mk2/assets/bluey/README.md).
 
----
+## Author
 
-## Contributing
-
-Contributions are welcome.
-
-If you want to experiment with the project:
-
-1. Fork the repository.
-2. Create your own branch.
-3. Make and document your changes.
-4. Submit a Pull Request.
-
-Improvements to the firmware, documentation, electronics, mechanical design and simulation tools are all welcome.
-
-Please keep the educational and non-clinical nature of the project clear when contributing.
-
----
-
-## License
-
-This repository is licensed under the **MIT License**.
-
-The license allows the source code and project files to be used, modified and redistributed under the terms of the MIT License.
-
-The MIT License does **not** imply that the hardware or software is safe, clinically validated, medically approved or suitable for use as a medical device.
-
----
-
-## Safety Disclaimer
-
-**IINTS is an experimental educational prototype.**
-
-The hardware, firmware, mechanical components and calculations in this repository have **not been designed, tested, validated or certified for clinical use**.
-
-Do not connect this prototype to a person and do not use it to administer insulin, medication or other substances.
-
-Commercial insulin pumps are safety-critical medical devices that require extensive engineering controls, verification, validation, risk management, manufacturing controls and regulatory approval. This project does not provide those guarantees.
-
-Use the repository only for **education, research and engineering experimentation**.
-
----
-
-## Special Thanks
-
-A special thank you to the **coaches of CoderDojo Genk and Hasselt** for their guidance and support throughout the development of IINTS.
-
-Their feedback and mentorship helped turn an early experiment into a much larger engineering and educational project.
-
----
-
-## Related Development
-
-This repository documents the **original hardware-focused generation of IINTS**.
-
-The project has since grown beyond the physical pump prototype into broader research and educational work around diabetes technology, simulation, algorithmic safety and transparent medical technology.
-
-The original pump remains an important part of that story: it was the starting point for understanding what happens between a line of software and the physical movement of a medical device.
+Developed by **Rune Bobbaers** as part of the **IINTS** research project.
