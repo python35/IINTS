@@ -17,8 +17,6 @@
   <a href="mk2/simulator/">UI Simulator</a>
   &nbsp;&middot;&nbsp;
   <a href="mk2/hardware/pcb-v2/">PCB V2</a>
-  &nbsp;&middot;&nbsp;
-  <a href="mk2/docs/IINTS-MK2.pdf">Report</a>
 </p>
 
 <p align="center">
