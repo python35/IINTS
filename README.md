@@ -18,11 +18,12 @@
   &nbsp;&middot;&nbsp;
   <a href="mk2/hardware/pcb-v2/">PCB V2</a>
   &nbsp;&middot;&nbsp;
-  <a href="mk2/docs/IINTS-MK2.pdf">Project Report</a>
+  <a href="mk2/docs/IINTS-MK2.pdf">Report</a>
 </p>
 
-> **Branch:** You are viewing `mk2`. The original project remains available on
-> the [`mk1` branch](https://github.com/python35/IINTS/tree/mk1).
+<p align="center">
+  <sub>Viewing the <code>mk2</code> branch. Looking for the <a href="https://github.com/python35/IINTS/tree/mk1">original MK1</a>?</sub>
+</p>
 
 > [!CAUTION]
 > **Research prototype only.** IINTS MK2 is not a certified medical device and
@@ -34,15 +35,16 @@ IINTS MK2 is the second generation of the IINTS project. It brings the pump
 mechanism, embedded interface, virtual glucose sensor, and development tools
 together in one transparent open source research platform.
 
-| Area | Current MK2 |
-| --- | --- |
-| Research focus | Pump mechanics, embedded UI, and neuro-inclusive interaction |
-| Core hardware | Raspberry Pi Pico, ST7789 IPS display, DRV8833, bipolar stepper, lead screw, and test syringe |
-| Interface | Three physical buttons with Standard Mode and low-sensory Calm Mode |
-| Glucose model | Virtual CGM in `mg/dL`, updated every 60 seconds |
-| Development | MicroPython firmware, Pico deploy package, and desktop UI simulator |
-| Open design files | Firmware, documentation, assets, report, and editable KiCad V2 sources |
-| Status | Working educational prototype; PCB V2 remains a design draft |
+- **Research focus:** pump mechanics, embedded UI, and neuro-inclusive
+  interaction.
+- **Hardware:** Raspberry Pi Pico, ST7789 IPS display, DRV8833, bipolar
+  stepper, lead screw, and test syringe.
+- **Interface:** three physical buttons with Standard Mode and low-sensory
+  Calm Mode.
+- **Glucose model:** virtual CGM in `mg/dL`, updated every 60 seconds.
+- **Development:** MicroPython firmware, Pico deploy package, desktop UI
+  simulator, and editable KiCad V2 sources.
+- **Status:** working educational prototype; PCB V2 remains a design draft.
 
 ## Research Goals
 
