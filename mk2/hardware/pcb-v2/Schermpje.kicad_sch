@@ -1,0 +1,135 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "edf1c84e-1528-4466-bffc-dc1ee6842a8d")
+	(paper "A4")
+	(lib_symbols)
+	(sheet
+		(at 109.22 29.21)
+		(size 33.02 29.21)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "01524d49-c127-4482-868f-e0595a6aaa08")
+		(property "Sheetname" "3e-knopje"
+			(at 109.22 28.4984 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "3e-knopje.kicad_sch"
+			(at 109.22 59.0046 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "ai_pomp"
+				(path "/db00c1a6-b384-4151-a89a-8177b454a833/6b6176e0-1090-44d6-94db-322cd44c619d"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 72.39 29.21)
+		(size 34.29 29.21)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "2bbc754b-5157-4b09-a797-4cbb9da508c3")
+		(property "Sheetname" "2e-knopje"
+			(at 72.39 28.4984 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "2e-knopje.kicad_sch"
+			(at 72.39 59.0046 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "ai_pomp"
+				(path "/db00c1a6-b384-4151-a89a-8177b454a833/6b6176e0-1090-44d6-94db-322cd44c619d"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 29.21 29.21)
+		(size 35.56 27.94)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "d7d9c4e8-80fc-4f5d-8a2f-538e3f7b2a4d")
+		(property "Sheetname" "1e-knopje"
+			(at 29.21 28.4984 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "1e-knopje.kicad_sch"
+			(at 29.21 57.7346 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "ai_pomp"
+				(path "/db00c1a6-b384-4151-a89a-8177b454a833/6b6176e0-1090-44d6-94db-322cd44c619d"
+					(page "4")
+				)
+			)
+		)
+	)
+)

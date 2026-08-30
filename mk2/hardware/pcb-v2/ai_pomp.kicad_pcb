@@ -1,0 +1,16 @@
+
+(kicad_pcb (version 20211014) (generator kicad)
+  (general (thickness 1.6))
+  (paper "A4")
+  (title_block (title "AI Pomp PCB") (date "2025-05-24"))
+  (layers
+    (0 "F.Cu" signal)
+    (31 "B.Cu" signal)
+    (32 "Edge.Cuts" user))
+  (footprint "Processor:ComputeModule4" (at 50 50))
+  (footprint "Display:OLED_SPI" (at 120 50))
+  (footprint "Switch:SW_Push" (at 60 100))
+  (footprint "Switch:SW_Push" (at 70 100))
+  (footprint "Switch:SW_Push" (at 80 100))
+  (footprint "Driver:DRV8833" (at 50 130))
+)
