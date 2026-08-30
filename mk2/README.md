@@ -19,10 +19,10 @@ wiring, firmware, and interaction patterns.
 <table>
   <tr>
     <td width="50%" align="center">
-      <img src="assets/hardware/mk2-complete-prototype.png" width="430" alt="Complete IINTS MK2 prototype with controller, display, syringe, lead screw, and stepper motor">
+      <img src="assets/hardware/mk2-complete-prototype-hero.png" width="430" alt="Complete IINTS MK2 prototype with controller, display, syringe, lead screw, and stepper motor">
     </td>
     <td width="50%" align="center">
-      <img src="simulator/previews/calm-mode-home.png" width="430" alt="IINTS MK2 Calm Mode home screen">
+      <img src="simulator/previews/calm-mode-home.png" width="330" alt="IINTS MK2 Calm Mode home screen">
     </td>
   </tr>
   <tr>

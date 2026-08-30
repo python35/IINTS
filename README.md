@@ -1,54 +1,50 @@
-# IINTS MK2
-
-**Second-generation neuro-inclusive insulin pump simulator, open hardware
-study, and electromechanical research demonstrator**
-
-> You are viewing the **`mk2` branch**. For the original first-generation
-> project, open the [`mk1` branch](https://github.com/python35/IINTS/tree/mk1).
-
-> [!CAUTION]
-> **Research and education prototype only.** IINTS MK2 is not a certified
-> medical device. It must not be used to make treatment decisions or deliver
-> insulin to a person. Test it disconnected from a person and use water or
-> another harmless test liquid.
+<h1 align="center">IINTS MK2</h1>
 
 <p align="center">
-  <img src="mk2/assets/hardware/mk2-complete-prototype.png" width="650" alt="Complete IINTS MK2 prototype with controller, display, syringe, lead screw, and stepper motor">
+  <strong>Open, neuro-inclusive insulin pump research platform</strong><br>
+  <sub>Firmware, hardware, interface research, and an electromechanical prototype built around Raspberry Pi Pico.</sub>
 </p>
 
-<p align="center"><strong>Complete IINTS MK2 research prototype</strong></p>
+<p align="center">
+  <img src="mk2/assets/hardware/mk2-complete-prototype-hero.png" width="760" alt="Complete IINTS MK2 prototype with controller, display, syringe, lead screw, and stepper motor">
+</p>
 
-## At A Glance
+<p align="center">
+  <a href="mk2/README.md"><strong>Documentation</strong></a>
+  &nbsp;&middot;&nbsp;
+  <a href="mk2/firmware/">Firmware</a>
+  &nbsp;&middot;&nbsp;
+  <a href="mk2/simulator/">UI Simulator</a>
+  &nbsp;&middot;&nbsp;
+  <a href="mk2/hardware/pcb-v2/">PCB V2</a>
+  &nbsp;&middot;&nbsp;
+  <a href="mk2/docs/IINTS-MK2.pdf">Project Report</a>
+</p>
 
-| | MK2 |
+> **Branch:** You are viewing `mk2`. The original project remains available on
+> the [`mk1` branch](https://github.com/python35/IINTS/tree/mk1).
+
+> [!CAUTION]
+> **Research prototype only.** IINTS MK2 is not a certified medical device and
+> must not be used for treatment decisions or to deliver insulin to a person.
+
+## Project Overview
+
+IINTS MK2 is the second generation of the IINTS project. It brings the pump
+mechanism, embedded interface, virtual glucose sensor, and development tools
+together in one transparent open source research platform.
+
+| Area | Current MK2 |
 | --- | --- |
-| Purpose | Open research demonstrator for pump mechanics, embedded UI, and neuro-inclusive interaction |
-| Controller | Raspberry Pi Pico running MicroPython |
-| Interface | 240 x 240 ST7789 IPS display and three physical buttons |
-| Motor system | DRV8833 with a bipolar stepper, lead screw, and test syringe |
-| Glucose input | Virtual CGM in `mg/dL`, updated every 60 seconds |
-| UI modes | Standard Mode and low-sensory Calm Mode |
-| Development tools | Desktop UI simulator, Thonny, `mpremote`, and `mpy-cross` |
-| Open files | Firmware, Pico deploy package, KiCad V2 sources, assets, report, and guides |
-| Current status | Working educational prototype; PCB V2 source remains a design draft |
+| Research focus | Pump mechanics, embedded UI, and neuro-inclusive interaction |
+| Core hardware | Raspberry Pi Pico, ST7789 IPS display, DRV8833, bipolar stepper, lead screw, and test syringe |
+| Interface | Three physical buttons with Standard Mode and low-sensory Calm Mode |
+| Glucose model | Virtual CGM in `mg/dL`, updated every 60 seconds |
+| Development | MicroPython firmware, Pico deploy package, and desktop UI simulator |
+| Open design files | Firmware, documentation, assets, report, and editable KiCad V2 sources |
+| Status | Working educational prototype; PCB V2 remains a design draft |
 
-## Quick Navigation
-
-| I want to... | Open |
-| --- | --- |
-| Understand the complete MK2 | [Technical MK2 README](mk2/README.md) |
-| Read the firmware | [MicroPython source](mk2/firmware/pico_drv8833_correct_pins.py) |
-| Upload the app to a Pico | [Ready-to-upload deploy folder](mk2/firmware/deploy/) |
-| Preview every screen safely | [Desktop UI simulator](mk2/simulator/) |
-| Inspect the electronics design | [KiCad PCB V2 project](mk2/hardware/pcb-v2/) |
-| Read the research report | [IINTS MK2 PDF](mk2/docs/IINTS-MK2.pdf) |
-
-## Overview
-
-IINTS MK2 is the second generation of the IINTS project. It combines a
-Raspberry Pi Pico, a 240 x 240 ST7789 IPS display, three physical buttons, a
-DRV8833 motor driver, a bipolar stepper motor, a virtual glucose sensor, and a
-desktop UI simulator.
+## Research Goals
 
 MK2 explores two questions together:
 
