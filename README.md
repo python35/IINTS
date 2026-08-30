@@ -1,10 +1,16 @@
-# IINTS – Open-Source Insulin Pump Prototype
+# IINTS MK1
+
+**Original first-generation open-source insulin pump research prototype**
+
+> You are viewing the **`mk1` branch**. For the second-generation firmware,
+> Calm Mode, UI simulator, controller PCB, and open KiCad design files, open the
+> [`mk2` branch](https://github.com/python35/IINTS/tree/mk2).
 
 <div align="center">
   <img src="assets/IINTS_banner.png" width="1200">
 </div>
 
-**IINTS** (*Insuline Is Not The Solution*) is an open-source educational insulin pump prototype built around the **Raspberry Pi Pico**.
+**IINTS MK1** (*Insuline Is Not The Solution*) is the original open-source educational insulin pump prototype built around the **Raspberry Pi Pico**.
 
 The project started as an experiment to understand how insulin pumps work from an engineering perspective: how a motor can create precise linear movement, how that movement can be translated into fluid displacement, and how embedded software can control the complete mechanism.
 
@@ -13,11 +19,13 @@ The first generation of IINTS combines a **Raspberry Pi Pico**, a **stepper-driv
 > **Important:** IINTS is an educational and research prototype.
 > It is **not a medical device**, has not been clinically validated or certified, and must **not be used to administer insulin or any other medication to a person**.
 
-## Project Generations
+## Project Branches
 
-- **MK.1:** The original pump files remain in the repository root.
-- **MK.2:** The second-generation firmware, Calm Mode, simulator, assets, and
-  documentation are available in [`/mk2`](mk2/README.md).
+- **`mk1` branch:** The original pump firmware, assets, guide, and mechanical
+  files documented on this page.
+- **`mk2` branch:** The second-generation controller, firmware, Calm Mode,
+  simulator, PCB sources, and dedicated MK2 documentation are available on
+  [the MK2 branch](https://github.com/python35/IINTS/tree/mk2).
 
 ---
 
@@ -210,7 +218,7 @@ The exact hardware used has changed during development, but the prototype is bui
 
 ## 3D Printing
 
-The available 3D-printable components can be found in the [`/stl`](https://github.com/python35/IINTS/tree/main/stl) directory.
+The available 3D-printable components can be found in the [`/stl`](https://github.com/python35/IINTS/tree/mk1/stl) directory.
 
 ### Suggested Starting Settings
 
