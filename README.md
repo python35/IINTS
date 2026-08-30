@@ -12,22 +12,38 @@ study, and electromechanical research demonstrator**
 > insulin to a person. Test it disconnected from a person and use water or
 > another harmless test liquid.
 
-<table>
-  <tr>
-    <td width="50%" align="center">
-      <img src="mk2/assets/hardware/mk2-controller-prototype.jpg" width="430" alt="Photograph of the IINTS MK2 controller PCB">
-    </td>
-    <td width="50%" align="center">
-      <img src="mk2/simulator/previews/calm-mode-home.png" width="430" alt="IINTS MK2 Calm Mode home screen">
-    </td>
-  </tr>
-  <tr>
-    <td align="center"><strong>MK2 controller prototype</strong></td>
-    <td align="center"><strong>Calm Mode interface</strong></td>
-  </tr>
-</table>
+<p align="center">
+  <img src="mk2/assets/hardware/mk2-complete-prototype.png" width="650" alt="Complete IINTS MK2 prototype with controller, display, syringe, lead screw, and stepper motor">
+</p>
 
-## About MK2
+<p align="center"><strong>Complete IINTS MK2 research prototype</strong></p>
+
+## At A Glance
+
+| | MK2 |
+| --- | --- |
+| Purpose | Open research demonstrator for pump mechanics, embedded UI, and neuro-inclusive interaction |
+| Controller | Raspberry Pi Pico running MicroPython |
+| Interface | 240 x 240 ST7789 IPS display and three physical buttons |
+| Motor system | DRV8833 with a bipolar stepper, lead screw, and test syringe |
+| Glucose input | Virtual CGM in `mg/dL`, updated every 60 seconds |
+| UI modes | Standard Mode and low-sensory Calm Mode |
+| Development tools | Desktop UI simulator, Thonny, `mpremote`, and `mpy-cross` |
+| Open files | Firmware, Pico deploy package, KiCad V2 sources, assets, report, and guides |
+| Current status | Working educational prototype; PCB V2 source remains a design draft |
+
+## Quick Navigation
+
+| I want to... | Open |
+| --- | --- |
+| Understand the complete MK2 | [Technical MK2 README](mk2/README.md) |
+| Read the firmware | [MicroPython source](mk2/firmware/pico_drv8833_correct_pins.py) |
+| Upload the app to a Pico | [Ready-to-upload deploy folder](mk2/firmware/deploy/) |
+| Preview every screen safely | [Desktop UI simulator](mk2/simulator/) |
+| Inspect the electronics design | [KiCad PCB V2 project](mk2/hardware/pcb-v2/) |
+| Read the research report | [IINTS MK2 PDF](mk2/docs/IINTS-MK2.pdf) |
+
+## Overview
 
 IINTS MK2 is the second generation of the IINTS project. It combines a
 Raspberry Pi Pico, a 240 x 240 ST7789 IPS display, three physical buttons, a
@@ -41,7 +57,8 @@ MK2 explores two questions together:
 2. How can the interaction be calmer and easier to follow for children and
    neurodivergent users without hiding clinically relevant information?
 
-The current interface is in English and uses glucose values in `mg/dL`.
+The current interface is in English and uses glucose values in `mg/dL`. The
+complete source and documentation are kept under [`mk2/`](mk2/README.md).
 
 ## Main Features
 
@@ -57,16 +74,6 @@ The current interface is in English and uses glucose values in `mg/dL`.
 - desktop simulator that runs the real firmware drawing functions;
 - published MicroPython source, deploy package, project report, UI assets,
   controller photograph, and editable KiCad V2 design files.
-
-## Start Here
-
-The complete MK2 technical documentation is available in:
-
-### [Open the full MK2 README](mk2/README.md)
-
-It contains the complete pin mapping, button legend, settings, educational
-calculations, virtual CGM behaviour, power management, simulator instructions,
-Pico deployment procedure, troubleshooting, testing order, and limitations.
 
 ## Open Project Files
 
