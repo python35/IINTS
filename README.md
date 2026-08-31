@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="mk2/assets/branding/productfoto.png" width="760" alt="Complete IINTS MK2 prototype with controller, display, syringe, lead screw, and stepper motor">
+  <img src="mk2/assets/branding/productfoto.jpeg" width="760" alt="Complete IINTS MK2 prototype with controller, display, syringe, lead screw, and stepper motor">
 </p>
 
 <p align="center">
