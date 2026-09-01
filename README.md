@@ -17,6 +17,8 @@
   <a href="mk2/simulator/">UI Simulator</a>
   &nbsp;&middot;&nbsp;
   <a href="mk2/hardware/pcb-v2/">PCB V2</a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://iints.org/html/hardware.html"><strong>Website</strong></a>
 </p>
 
 <p align="center">
