@@ -2,6 +2,31 @@ import machine
 import utime
 import framebuf
 import gc
+import math
+import sys
+import __main__
+import binascii
+import select
+import struct
+
+WIDTH = 240
+HEIGHT = 240
+
+if hasattr(__main__, "display_buffer") and len(__main__.display_buffer) == 115200:
+    buffer = __main__.display_buffer
+else:
+    gc.collect()
+    buffer = bytearray(115200)
+    __main__.display_buffer = buffer
+
+fb = framebuf.FrameBuffer(buffer, WIDTH, HEIGHT, framebuf.RGB565)
+char_buffer = bytearray(8 * 8 * 2)
+char_fb = framebuf.FrameBuffer(char_buffer, 8, 8, framebuf.RGB565)
+raw_image_row_buffer = bytearray(64 * 2)
+raw_image_row_view = memoryview(raw_image_row_buffer)
+raw_bg_pixel = bytearray(2)
+raw_bg_fb = framebuf.FrameBuffer(raw_bg_pixel, 1, 1, framebuf.RGB565)
+
 from st7789 import ST7789
 
 # --- Pin mapping ---
@@ -63,16 +88,15 @@ ST7789_SLPIN = 0x10
 ST7789_SLPOUT = 0x11
 ST7789_DISPON = 0x29
 
-# --- Grafische UI ---
-WIDTH = 240
-HEIGHT = 240
-
-
 def rgb565(r, g, b):
     # Convert to 16-bit RGB565 and swap bytes for MicroPython's little-endian FrameBuffer
     c = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)
     return ((c & 0xFF) << 8) | ((c >> 8) & 0xFF)
 
+
+DARK_MODE = 0
+DYSCALCULIA_MODE = 0
+SENSORY_PROFILE = 0
 
 # --- Rustig IPS-palet: neutraal, hoog contrast en niet afhankelijk van kleur ---
 COLOR_BG = rgb565(244, 247, 249)        # Zacht koelwit
@@ -91,22 +115,232 @@ COLOR_BLUE = rgb565(38, 96, 134)
 COLOR_BLACK = 0x0000
 COLOR_WHITE = 0xFFFF
 
-gc.collect()
-buffer = bytearray(WIDTH * HEIGHT * 2)
-fb = framebuf.FrameBuffer(buffer, WIDTH, HEIGHT, framebuf.RGB565)
-char_buffer = bytearray(8 * 8 * 2)
-char_fb = framebuf.FrameBuffer(char_buffer, 8, 8, framebuf.RGB565)
-raw_image_row_buffer = bytearray(64 * 2)
-raw_image_row_view = memoryview(raw_image_row_buffer)
-raw_bg_pixel = bytearray(2)
-raw_bg_fb = framebuf.FrameBuffer(raw_bg_pixel, 1, 1, framebuf.RGB565)
+
+def update_theme_colors():
+    global COLOR_BG, COLOR_PANEL, COLOR_PANEL_2, COLOR_EDGE, COLOR_SHADOW, COLOR_TEXT, COLOR_MUTED, COLOR_FOCUS, COLOR_MINT, COLOR_BLUE
+    if DARK_MODE == 1:
+        COLOR_BG = rgb565(13, 17, 23)
+        COLOR_PANEL = rgb565(22, 27, 34)
+        COLOR_PANEL_2 = rgb565(33, 38, 45)
+        COLOR_EDGE = rgb565(48, 54, 61)
+        COLOR_SHADOW = rgb565(1, 4, 9)
+        COLOR_TEXT = rgb565(230, 237, 243)
+        COLOR_MUTED = rgb565(139, 148, 158)
+        COLOR_FOCUS = rgb565(56, 139, 253)
+        COLOR_MINT = rgb565(56, 139, 253)
+        COLOR_BLUE = rgb565(56, 139, 253)
+    else:
+        COLOR_BG = rgb565(244, 247, 249)
+        COLOR_PANEL = rgb565(255, 255, 255)
+        COLOR_PANEL_2 = rgb565(232, 238, 243)
+        COLOR_EDGE = rgb565(198, 208, 216)
+        COLOR_SHADOW = rgb565(224, 230, 234)
+        COLOR_TEXT = rgb565(28, 38, 46)
+        COLOR_MUTED = rgb565(75, 91, 104)
+        COLOR_FOCUS = rgb565(38, 96, 134)
+        COLOR_MINT = rgb565(38, 96, 134)
+        COLOR_BLUE = rgb565(38, 96, 134)
+
+
+SERIAL_MIRROR_ENABLED = getattr(sys.implementation, "name", "") == "micropython"
+MIRROR_MAGIC = b"IINTS2D!"
+MIRROR_PROTOCOL_VERSION = 2
+MIRROR_REQUEST = 70  # "F": send the next frame, changed bands only
+MIRROR_RESET_REQUEST = 82  # "R": forget the band cache and send every band
+MIRROR_FRAME_BYTES = WIDTH * HEIGHT * 2
+# The frame is cut into horizontal bands. Only bands whose contents changed
+# since the previous transfer go over USB, which is what keeps the mirror fast:
+# a typical screen update touches two or three bands instead of all 24.
+MIRROR_BAND_ROWS = 10
+MIRROR_BAND_COUNT = HEIGHT // MIRROR_BAND_ROWS
+MIRROR_BAND_BYTES = MIRROR_BAND_ROWS * WIDTH * 2
+MIRROR_MASK_BYTES = (MIRROR_BAND_COUNT + 7) // 8
+MIRROR_HEADER_FORMAT = "<8sBBHIII"
+MIRROR_HEADER_BYTES = struct.calcsize(MIRROR_HEADER_FORMAT)
+MIRROR_WRITE_CHUNK_BYTES = 4096
+MIRROR_COLLECT_INTERVAL = 16
+# Safety net: rescan the whole frame this often even when nothing was flushed,
+# so a stray write into the buffer still reaches the mirror.
+MIRROR_RESCAN_INTERVAL_MS = 500
+
+mirror_header = bytearray(MIRROR_HEADER_BYTES)
+mirror_mask = bytearray(MIRROR_MASK_BYTES)
+mirror_trailer = bytearray(4)
+mirror_frame_view = memoryview(buffer)
+mirror_band_crc = [0] * MIRROR_BAND_COUNT
+mirror_band_crc_next = [0] * MIRROR_BAND_COUNT
+mirror_band_cache_valid = False
+mirror_display_dirty = True
+mirror_last_scan_ms = 0
+mirror_frame_requested = False
+mirror_frame_sequence = 0
+mirror_poll = None
+MIRROR_EMPTY_MASK_CRC = binascii.crc32(bytes(MIRROR_MASK_BYTES), 0) & 0xFFFFFFFF
+
+if SERIAL_MIRROR_ENABLED:
+    try:
+        mirror_poll = select.poll()
+        mirror_poll.register(sys.stdin, select.POLLIN)
+    except Exception:
+        mirror_poll = None
+        SERIAL_MIRROR_ENABLED = False
+
+
+def poll_serial_mirror_request():
+    global mirror_frame_requested, mirror_band_cache_valid
+    if not SERIAL_MIRROR_ENABLED or mirror_poll is None:
+        return
+
+    try:
+        for _attempt in range(8):
+            pending = False
+            for _event in mirror_poll.ipoll(0):
+                pending = True
+                break
+            if not pending:
+                return
+            request = sys.stdin.buffer.read(1)
+            if not request:
+                return
+            command = request[0]
+            if command == MIRROR_RESET_REQUEST:
+                mirror_band_cache_valid = False
+                mirror_frame_requested = True
+            elif command == MIRROR_REQUEST:
+                mirror_frame_requested = True
+    except Exception:
+        pass
+
+
+def write_mirror_idle_frame():
+    """Answer a request with an empty frame: nothing on screen changed."""
+    global mirror_band_cache_valid
+    for index in range(MIRROR_MASK_BYTES):
+        mirror_mask[index] = 0
+    struct.pack_into(
+        MIRROR_HEADER_FORMAT,
+        mirror_header,
+        0,
+        MIRROR_MAGIC,
+        MIRROR_PROTOCOL_VERSION,
+        MIRROR_BAND_COUNT,
+        MIRROR_BAND_ROWS,
+        mirror_frame_sequence,
+        0,
+        gc.mem_free(),
+    )
+    struct.pack_into("<I", mirror_trailer, 0, MIRROR_EMPTY_MASK_CRC)
+    output = sys.stdout.buffer
+    if (
+        output.write(mirror_header) != MIRROR_HEADER_BYTES
+        or output.write(mirror_mask) != MIRROR_MASK_BYTES
+        or output.write(mirror_trailer) != 4
+    ):
+        mirror_band_cache_valid = False
+
+
+def stream_mirror_frame_if_requested():
+    global mirror_frame_requested, mirror_frame_sequence, mirror_band_cache_valid
+    global mirror_display_dirty, mirror_last_scan_ms
+    poll_serial_mirror_request()
+    if not mirror_frame_requested:
+        return
+
+    mirror_frame_requested = False
+    try:
+        mirror_frame_sequence = (mirror_frame_sequence + 1) & 0xFFFFFFFF
+
+        now_ms = utime.ticks_ms()
+        if (
+            mirror_band_cache_valid
+            and not mirror_display_dirty
+            and utime.ticks_diff(now_ms, mirror_last_scan_ms) < MIRROR_RESCAN_INTERVAL_MS
+        ):
+            # Nothing was drawn since the last transfer, so skip checksumming
+            # 115 KB of unchanged pixels and keep the pump's main loop free.
+            write_mirror_idle_frame()
+            return
+
+        if mirror_frame_sequence % MIRROR_COLLECT_INTERVAL == 0:
+            gc.collect()
+        mirror_last_scan_ms = now_ms
+        mirror_display_dirty = False
+
+        cache_valid = mirror_band_cache_valid
+        for index in range(MIRROR_MASK_BYTES):
+            mirror_mask[index] = 0
+
+        changed_bands = 0
+        for band in range(MIRROR_BAND_COUNT):
+            start = band * MIRROR_BAND_BYTES
+            crc = binascii.crc32(mirror_frame_view[start : start + MIRROR_BAND_BYTES], 0) & 0xFFFFFFFF
+            mirror_band_crc_next[band] = crc
+            if not cache_valid or crc != mirror_band_crc[band]:
+                mirror_mask[band >> 3] |= 1 << (band & 7)
+                changed_bands += 1
+
+        struct.pack_into(
+            MIRROR_HEADER_FORMAT,
+            mirror_header,
+            0,
+            MIRROR_MAGIC,
+            MIRROR_PROTOCOL_VERSION,
+            MIRROR_BAND_COUNT,
+            MIRROR_BAND_ROWS,
+            mirror_frame_sequence,
+            changed_bands * MIRROR_BAND_BYTES,
+            gc.mem_free(),
+        )
+
+        output = sys.stdout.buffer
+        if output.write(mirror_header) != MIRROR_HEADER_BYTES:
+            mirror_band_cache_valid = False
+            return
+        if output.write(mirror_mask) != MIRROR_MASK_BYTES:
+            mirror_band_cache_valid = False
+            return
+
+        stream_crc = binascii.crc32(mirror_mask, 0) & 0xFFFFFFFF
+        for band in range(MIRROR_BAND_COUNT):
+            if not (mirror_mask[band >> 3] >> (band & 7)) & 1:
+                continue
+            start = band * MIRROR_BAND_BYTES
+            end = start + MIRROR_BAND_BYTES
+            stream_crc = binascii.crc32(mirror_frame_view[start:end], stream_crc) & 0xFFFFFFFF
+            while start < end:
+                stop = start + MIRROR_WRITE_CHUNK_BYTES
+                if stop > end:
+                    stop = end
+                written = output.write(mirror_frame_view[start:stop])
+                if written is None:
+                    written = stop - start
+                if written <= 0:
+                    mirror_band_cache_valid = False
+                    return
+                start += written
+
+        struct.pack_into("<I", mirror_trailer, 0, stream_crc)
+        if output.write(mirror_trailer) != 4:
+            mirror_band_cache_valid = False
+            return
+
+        for band in range(MIRROR_BAND_COUNT):
+            mirror_band_crc[band] = mirror_band_crc_next[band]
+        mirror_band_cache_valid = True
+    except Exception:
+        mirror_band_cache_valid = False
 
 
 def flush():
+    global mirror_display_dirty
     display.blit_buffer(buffer, 0, 0, WIDTH, HEIGHT)
+    mirror_display_dirty = True
+    stream_mirror_frame_if_requested()
 
 
-def clear(color=COLOR_BG):
+def clear(color=None):
+    if color is None:
+        color = COLOR_BG
     fb.fill(color)
 
 
@@ -372,21 +606,35 @@ def rounded_digit_width(height):
 
 def draw_digit_segment(segment, x, y, w, h, thickness, color):
     half = h // 2
-    radius = max(2, thickness // 2)
+    r = max(2, thickness // 2)
     if segment == "a":
-        fill_round_rect(x, y, w, thickness, radius, color)
+        fill_round_rect(x, y, w, thickness, r, color)
+        fill_circle(x + r, y + r, r, color)
+        fill_circle(x + w - r, y + r, r, color)
     elif segment == "b":
-        fill_round_rect(x + w - thickness, y, thickness, half + radius, radius, color)
+        fill_round_rect(x + w - thickness, y, thickness, half + r, r, color)
+        fill_circle(x + w - r, y + r, r, color)
+        fill_circle(x + w - r, y + half, r, color)
     elif segment == "c":
-        fill_round_rect(x + w - thickness, y + half - radius, thickness, half + radius, radius, color)
+        fill_round_rect(x + w - thickness, y + half - r, thickness, half + r, r, color)
+        fill_circle(x + w - r, y + half, r, color)
+        fill_circle(x + w - r, y + h - r, r, color)
     elif segment == "d":
-        fill_round_rect(x, y + h - thickness, w, thickness, radius, color)
+        fill_round_rect(x, y + h - thickness, w, thickness, r, color)
+        fill_circle(x + r, y + h - r, r, color)
+        fill_circle(x + w - r, y + h - r, r, color)
     elif segment == "e":
-        fill_round_rect(x, y + half - radius, thickness, half + radius, radius, color)
+        fill_round_rect(x, y + half - r, thickness, half + r, r, color)
+        fill_circle(x + r, y + half, r, color)
+        fill_circle(x + r, y + h - r, r, color)
     elif segment == "f":
-        fill_round_rect(x, y, thickness, half + radius, radius, color)
+        fill_round_rect(x, y, thickness, half + r, r, color)
+        fill_circle(x + r, y + r, r, color)
+        fill_circle(x + r, y + half, r, color)
     elif segment == "g":
-        fill_round_rect(x, y + half - thickness // 2, w, thickness, radius, color)
+        fill_round_rect(x, y + half - thickness // 2, w, thickness, r, color)
+        fill_circle(x + r, y + half, r, color)
+        fill_circle(x + w - r, y + half, r, color)
 
 
 def draw_rounded_digit(char, x, y, height, color):
@@ -404,17 +652,23 @@ def draw_rounded_digit(char, x, y, height, color):
     if char == "1":
         stem_x = x + w - thickness - 2
         fill_round_rect(stem_x, y, thickness, height, r, color)
+        fill_circle(stem_x + r, y + r, r, color)
+        fill_circle(stem_x + r, y + height - r, r, color)
         fill_round_rect(stem_x - thickness, y, thickness + 2, thickness, r, color)
         return w
     if char == "4":
         stem_x = x + w - thickness - 2
         fill_round_rect(stem_x, y, thickness, height, r, color)
+        fill_circle(stem_x + r, y + r, r, color)
+        fill_circle(stem_x + r, y + height - r, r, color)
         fill_round_rect(x, y, thickness, half_h + thickness // 2, r, color)
         fill_round_rect(x, y + half_h - thickness // 2, w - 2, thickness, r, color)
         return w
     if char == "7":
         fill_round_rect(x, y, w, thickness, r, color)
+        fill_circle(x + r, y + r, r, color)
         fill_round_rect(x + w - thickness - 1, y, thickness, height, r, color)
+        fill_circle(x + w - r - 1, y + height - r, r, color)
         return w
 
     segments = SEGMENTS_BY_DIGIT.get(char)
@@ -553,6 +807,82 @@ def draw_cgm_home_screen():
     cob_text = "COB {} g".format(cob_val)
     draw_ui_text(iob_text, 24, 171, COLOR_MUTED)
     draw_ui_text(cob_text, 216 - ui_text_width(cob_text), 171, COLOR_MUTED)
+
+def draw_gauge_ring(cx, cy, radius, thickness, min_val=40, max_val=260, current_val=120, target_min=70, target_max=140):
+    start_deg = 140
+    end_deg = 400
+    span_deg = 260
+    dot_r = max(2, thickness // 2)
+
+    for deg in range(start_deg, end_deg + 1, 2):
+        rad = math.radians(deg)
+        x = int(cx + radius * math.cos(rad))
+        y = int(cy + radius * math.sin(rad))
+
+        val_at_deg = min_val + (deg - start_deg) * (max_val - min_val) / span_deg
+        col = COLOR_PANEL_2
+        if target_min <= val_at_deg <= target_max:
+            col = COLOR_EDGE
+        fill_circle(x, y, dot_r, col)
+
+    clamped_val = max(min_val, min(max_val, current_val))
+    fill_deg = start_deg + int((clamped_val - min_val) * span_deg / (max_val - min_val))
+    val_color = (
+        COLOR_FOCUS
+        if target_min <= current_val <= target_max
+        else (COLOR_AMBER if current_val > target_max else COLOR_CORAL)
+    )
+
+    for deg in range(start_deg, fill_deg + 1, 2):
+        rad = math.radians(deg)
+        x = int(cx + radius * math.cos(rad))
+        y = int(cy + radius * math.sin(rad))
+        fill_circle(x, y, dot_r, val_color)
+
+    knob_rad = math.radians(fill_deg)
+    knob_x = int(cx + radius * math.cos(knob_rad))
+    knob_y = int(cy + radius * math.sin(knob_rad))
+    fill_circle(knob_x, knob_y, dot_r + 3, COLOR_WHITE)
+    fill_circle(knob_x, knob_y, dot_r + 1, val_color)
+
+
+def draw_cgm_gauge_screen():
+    clear()
+    draw_header("CGM GAUGE", 0, 0)
+
+    draw_card(10, 34, 220, 164)
+
+    cx, cy = 120, 104
+    radius = 52
+    thickness = 8
+    draw_gauge_ring(
+        cx,
+        cy,
+        radius,
+        thickness,
+        min_val=40,
+        max_val=260,
+        current_val=huidige_bg,
+        target_min=70,
+        target_max=140,
+    )
+
+    value_text = format_value(huidige_bg)
+    number_h = 36
+    value_w = rounded_number_width(value_text, number_h)
+    start_x = (WIDTH - value_w) // 2
+    draw_rounded_number(value_text, start_x, 82, number_h, COLOR_TEXT)
+    draw_ui_centered("mg/dL", 122, COLOR_MUTED)
+    draw_compact_trend_arrow(120, 136, cgm_trend, COLOR_FOCUS)
+
+    iob_val = calculate_non_linear_iob(utime.time())
+    cob_val = int(calculate_cob(utime.time()))
+
+    fill_round_rect(22, 160, 92, 26, 6, COLOR_PANEL_2)
+    draw_ui_text("IOB {:.1f}U".format(iob_val), 32, 168, COLOR_MUTED)
+
+    fill_round_rect(126, 160, 92, 26, 6, COLOR_PANEL_2)
+    draw_ui_text("COB {}g".format(cob_val), 142, 168, COLOR_MUTED)
 
     draw_footer("~SLEEP", "~TREND", "BOLUS")
     flush()
@@ -1249,6 +1579,78 @@ def run_guided_bluey_bolus_flow():
         utime.sleep_ms(50)
 
 
+def draw_transition_timer_screen(elapsed_sec, total_sec):
+    clear()
+    draw_header("Meal transition", 1, 3)
+    draw_card(10, 34, 220, 164)
+
+    cx, cy = 120, 104
+    radius = 52
+    thickness = 8
+
+    remaining_sec = max(0, total_sec - elapsed_sec)
+    draw_gauge_ring(
+        cx,
+        cy,
+        radius,
+        thickness,
+        min_val=0,
+        max_val=total_sec,
+        current_val=remaining_sec,
+        target_min=0,
+        target_max=total_sec,
+    )
+
+    mins = remaining_sec // 60
+    secs = remaining_sec % 60
+    time_str = "{}:{:02d}".format(mins, secs)
+
+    number_h = 32
+    time_w = rounded_number_width(time_str, number_h)
+    draw_rounded_number(time_str, (WIDTH - time_w) // 2, 85, number_h, COLOR_TEXT)
+
+    draw_ui_centered("Getting ready to eat...", 124, COLOR_MUTED)
+    draw_ui_centered("Routine prep", 162, COLOR_FOCUS)
+
+    draw_footer("SKIP", "CANCEL", "START")
+    flush()
+
+
+def run_transition_timer(minutes=3):
+    total_sec = minutes * 60
+    start_ms = utime.ticks_ms()
+    wait_buttons_released()
+    mark_screen_dirty()
+
+    while True:
+        if sleep_if_idle():
+            continue
+
+        now = utime.ticks_ms()
+        elapsed_sec = utime.ticks_diff(now, start_ms) // 1000
+        if elapsed_sec >= total_sec:
+            draw_status_screen("Ready!", "Meal time", COLOR_MINT)
+            utime.sleep(1.2)
+            return True
+
+        render_once(
+            ("transition_timer", elapsed_sec),
+            draw_transition_timer_screen,
+            elapsed_sec,
+            total_sec,
+        )
+
+        if button_pressed(sad_button):
+            draw_status_screen("Cancelled", "No dose", COLOR_BLUE)
+            utime.sleep(1.2)
+            return False
+        if button_pressed(happy_button) or confirm_pressed():
+            wait_buttons_released()
+            return True
+
+        utime.sleep_ms(50)
+
+
 def run_cgm_graph_screen():
     wait_buttons_released()
     mark_screen_dirty()
@@ -1296,7 +1698,7 @@ angry_button = machine.Pin(PIN_BUTTON_3, machine.Pin.IN, machine.Pin.PULL_UP)
 
 
 def button_pressed(button, debounce_ms=35):
-    """Return True bij een nieuwe druk, na debounce en release."""
+    global last_button_click_ms
     buttons_down = (
         (1 if happy_button.value() == 0 else 0)
         + (1 if sad_button.value() == 0 else 0)
@@ -1305,12 +1707,23 @@ def button_pressed(button, debounce_ms=35):
     if buttons_down >= 2:
         return False
 
+    now = utime.ticks_ms()
+    lockout_ms = 0
+    if STIMMING_FILTER_MODE == 1:
+        lockout_ms = 250
+    elif STIMMING_FILTER_MODE == 2:
+        lockout_ms = 500
+
+    if lockout_ms > 0 and utime.ticks_diff(now, last_button_click_ms) < lockout_ms:
+        return False
+
     if button.value() == 0:
         utime.sleep_ms(debounce_ms)
         if button.value() == 0:
             while button.value() == 0:
                 utime.sleep_ms(10)
             utime.sleep_ms(80)
+            last_button_click_ms = utime.ticks_ms()
             mark_user_activity()
             return True
     return False
@@ -1668,6 +2081,13 @@ ISF = 1800.0 / TDD  # Insulin Sensitivity Factor (mg/dL daling per eenheid)
 TARGET_BG = 110
 DIA_HOURS = 4.0
 TAMAGOTCHI_MODE = 1
+UI_MODE = 0
+DARK_MODE = 0
+DYSCALCULIA_MODE = 0
+SENSORY_PROFILE = 0
+STIMMING_FILTER_MODE = 0
+ROUTINE_TIMER_MODE = 0
+last_button_click_ms = 0
 CGM_SIM_MODE = 1
 MOTION_ENABLED = 1
 ACTIVITY_MODE = False
@@ -2042,6 +2462,7 @@ def render_once(screen_key, draw_function, *args):
     if screen_key != last_screen_key:
         draw_function(*args)
         last_screen_key = screen_key
+    stream_mirror_frame_if_requested()
 
 
 def mark_screen_dirty():
@@ -2114,7 +2535,11 @@ def current_settings():
         ("Target", TARGET_BG, "mg/dL", 5, 20, 80, 180, "target"),
         ("Daily dose", TDD, "U/day", 1, 5, 10, 100, "tdd"),
         ("Insulin action", DIA_HOURS, "hours", 0.5, 1.0, 2.0, 8.0, "dia"),
+        ("Gauge ring", UI_MODE, "", 1, 1, 0, 1, "uimode"),
         ("Calm mode", TAMAGOTCHI_MODE, "", 1, 1, 0, 1, "tamagotchi"),
+        ("Dark theme", DARK_MODE, "", 1, 1, 0, 1, "darkmode"),
+        ("Dyscalculia assist", DYSCALCULIA_MODE, "", 1, 1, 0, 1, "dyscalculia"),
+        ("Sensory sound", SENSORY_PROFILE, "", 1, 1, 0, 1, "sensory"),
         ("CGM sensor", CGM_SIM_MODE, "", 1, 1, 0, 1, "cgm"),
         ("Animations", MOTION_ENABLED, "", 1, 1, 0, 1, "motion"),
         ("Rewind", 0, "", 1, 1, 0, 0, "rewind"),
@@ -2123,8 +2548,9 @@ def current_settings():
 
 
 def apply_setting(setting_id, value):
-    global TARGET_BG, TDD, ICR, ISF, DIA_HOURS
+    global TARGET_BG, TDD, ICR, ISF, DIA_HOURS, UI_MODE
     global TAMAGOTCHI_MODE, CGM_SIM_MODE, MOTION_ENABLED
+    global DARK_MODE, DYSCALCULIA_MODE, SENSORY_PROFILE
     if setting_id == "target":
         TARGET_BG = int(value)
     elif setting_id == "tdd":
@@ -2133,8 +2559,17 @@ def apply_setting(setting_id, value):
         ISF = 1800.0 / TDD
     elif setting_id == "dia":
         DIA_HOURS = float(value)
+    elif setting_id == "uimode":
+        UI_MODE = int(value)
     elif setting_id == "tamagotchi":
         TAMAGOTCHI_MODE = int(value)
+    elif setting_id == "darkmode":
+        DARK_MODE = int(value)
+        update_theme_colors()
+    elif setting_id == "dyscalculia":
+        DYSCALCULIA_MODE = int(value)
+    elif setting_id == "sensory":
+        SENSORY_PROFILE = int(value)
     elif setting_id == "cgm":
         CGM_SIM_MODE = int(value)
         if CGM_SIM_MODE:
@@ -2285,8 +2720,10 @@ def run_setting_editor(setting_index):
 def resolve_image_path(filename):
     for candidate in (
         filename,
+        "icons/" + filename,
         "Bluey/" + filename,
         "/" + filename,
+        "/icons/" + filename,
         "/Bluey/" + filename,
     ):
         try:
@@ -2321,7 +2758,9 @@ def draw_face_fallback(cx, cy, emotion):
         draw_thick_line(cx - 10, cy + 10, cx + 10, cy + 10, COLOR_AMBER, 2)
 
 
-def draw_raw_image(filename, x, y, w, h, mask_radius=None, bg_color=COLOR_BG):
+def draw_raw_image(filename, x, y, w, h, mask_radius=None, bg_color=None):
+    if bg_color is None:
+        bg_color = COLOR_BG
     if w <= 0 or h <= 0:
         return False
     if x + w <= 0 or y + h <= 0 or x >= WIDTH or y >= HEIGHT:
@@ -2528,7 +2967,12 @@ while True:
                 run_lock_screen()
                 continue
 
-            if TAMAGOTCHI_MODE == 1:
+            if UI_MODE == 1:
+                render_once(
+                    "cgm_gauge",
+                    draw_cgm_gauge_screen,
+                )
+            elif TAMAGOTCHI_MODE == 1:
                 emotion = calm_emotion_for_glucose(huidige_bg)
                 render_once(
                     "tamagotchi_home",
@@ -2558,6 +3002,11 @@ while True:
                 run_cgm_graph_screen()
             elif confirm_pressed():
                 mark_user_activity()
+                if ROUTINE_TIMER_MODE > 0:
+                    timer_mins = 1 if ROUTINE_TIMER_MODE == 1 else (3 if ROUTINE_TIMER_MODE == 2 else 5)
+                    if not run_transition_timer(timer_mins):
+                        reset_bolus_to_home()
+                        continue
                 if TAMAGOTCHI_MODE == 1:
                     run_guided_bluey_bolus_flow()
                 else:
