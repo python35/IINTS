@@ -658,11 +658,14 @@ class SimulatorApp:
         ttk.Button(top, text="Reload code", command=self.reload_firmware).grid(
             row=0, column=3, padx=4
         )
-        ttk.Button(top, text="Screenshot", command=self.export_current).grid(
+        ttk.Button(top, text="UI Builder", command=self.open_ui_builder).grid(
             row=0, column=4, padx=4
         )
+        ttk.Button(top, text="Screenshot", command=self.export_current).grid(
+            row=0, column=5, padx=4
+        )
         ttk.Button(top, text="Export all", command=self.export_all).grid(
-            row=0, column=5, padx=(4, 0)
+            row=0, column=6, padx=(4, 0)
         )
 
         self.root.columnconfigure(0, minsize=224)
@@ -1144,6 +1147,14 @@ class SimulatorApp:
         output = output_dir / f"{safe_filename(self.screen_var.get())}_{timestamp}.png"
         self.current_native_image.save(output)
         self.status_var.set(f"Saved {output.relative_to(APP_DIR)}")
+
+    def open_ui_builder(self):
+        if __package__:
+            from .ui_builder import UIBuilderWindow
+        else:
+            from ui_builder import UIBuilderWindow
+
+        UIBuilderWindow(self.root, self.status_var.set)
 
     def export_all(self):
         output_dir = APP_DIR / "previews"
